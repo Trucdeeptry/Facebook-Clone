@@ -1,0 +1,48 @@
+<template>
+  <div>
+    <card title="Verify your email">
+      <template #body>
+        <div class="main text-lg">
+          <p>Please check your emails for a message with your verify url.</p>
+          <p>
+            We sent your code to: <b>{{ userInfo?.email }}</b>
+          </p>
+        </div>
+      </template>
+      <template #footer>
+        <div class="content_footer flex justify-between items-center">
+          <a href="#" class="text-md text-blue-500 hover:underline"
+            >Didn't get a code?</a
+          >
+          <div class="button-group text-md flex items-center gap-3">
+            <baseButton class="bg-blue-500 text-white" push="/login">
+              Back to login</baseButton
+            >
+          </div>
+        </div>
+      </template>
+    </card>
+    <baseFooter></baseFooter>
+  </div>
+</template>
+
+<script setup>
+import baseButton from "../components/base_button.vue";
+import card from "../components/card.vue";
+import baseFooter from "../components/login_signup/footer.vue";
+import { ref, onMounted } from "vue";
+const userInfo = ref("");
+const isSendemailSuccess = await store.dispatch("auth/sendEmail", {
+    email: signUpInfo.email,
+    message:
+      "Thank you for registering with TSocial. To complete your registration",
+  });
+  if (isSendemailSuccess) {
+    route.push(`/verify`);
+  } else {
+    console.log("Send email failed");
+  }
+onMounted(() => {
+  userInfo.value = JSON.parse(localStorage.getItem("signUpInfo"));
+});
+</script>
