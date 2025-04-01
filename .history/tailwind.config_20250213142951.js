@@ -1,0 +1,29 @@
+module.exports = {
+  content: [
+    "./index.html", // Giữ lại nếu có file index.html
+    "./src/**/*.vue", // Quét tất cả các file .vue trong thư mục src
+    "./components/**/*.vue", // Nếu bạn có thư mục components riêng
+  ],
+  darkMode: "class", // or 'media' or 'class'
+  theme: {
+    extend: {
+      colors: {
+        "dark-main": "#18191A",
+        "dark-second": "#242526",
+        "dark-third": "#3A3B3C",
+        "dark-txt": "#b0b3b8",
+        "second-txt": "#b0b3b8",
+        "primary-button-background": "#0866ff",
+        "primary-txt": "#e2e5e9",
+      },
+    },
+  },
+  variants: {
+    extend: {
+      display: ["group-hover"],
+      transform: ["group-hover"],
+      scale: ["group-hover"],
+    },
+  },
+  plugins: [],
+};

@@ -1,0 +1,14 @@
+<template>
+  <div
+    class="fixed shadow rounded-lg bg-white w-1/2 dark:bg-dark-second top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6"
+  >
+    <p class="font-bold text-2xl dark:text-primary-txt text-center">
+      {{ props.author_info.info.surName + `'s` + ' Post' }}
+    </p>
+  </div>
+</template>
+
+<script setup>
+import { defineProps } from "vue";
+const props = defineProps(["author_info", "postInfo"]);
+</script>

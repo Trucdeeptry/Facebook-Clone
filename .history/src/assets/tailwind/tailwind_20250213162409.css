@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@theme{
+    --test-color: #ff5731
+}
