@@ -5,7 +5,7 @@
     <div class="flex justify-center h-screen">
       <left_menu> </left_menu>
       <div class="w-full lg:w-2/3 xl:w-2/5 pt-32 lg:pt-16 px-2">
-        <post_form class="!mt-20"></post_form>
+        <post_form class="!mt-24"></post_form>
         <story class="!mt-6 !mb-6"></story>
         <post :isOverlay="true" v-if="posts.length" :postsProp="posts"></post>
       </div>
@@ -27,27 +27,22 @@ import { loginUser } from "../composables/autoLogin";
 import post from "../components/post/post.vue";
 import { ref, watch } from "vue";
 const { userInfo, isLoadingUser } = loginUser();
+
 const store = useStore();
 const router = useRouter();
 // log out
 function logOut() {
-  const isLogoutSucceess = store.dispatch("auth/logOut");
-  if (isLogoutSucceess) {
-    router.push("/login");
-    alert("Log out success");
-  } else {
-    alert("Log out failed");
-  }
+  
 }
 // get posts
 const posts = ref([]);
 async function getPosts(user_id) {
-  const getPosts = await store.dispatch("home/getPosts", user_id);
+  const getPosts = await store.dispatch("home/getPosts", user_id);  
   return getPosts;
 }
 watch(isLoadingUser, async (loading) => {
   if (!loading && userInfo.value) {
-    posts.value = await getPosts(userInfo.value._id);
+    posts.value = await getPosts(userInfo.value.user_id);
   }
 });
 </script>

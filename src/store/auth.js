@@ -1,18 +1,13 @@
-import { jwtDecode } from "jwt-decode";
-import axiosInstance from "./setLoading";
+import supabase from "../composables/supabase";
+import Cookies from "js-cookie";
+import router from "../route";
+import axios from "axios";
 export default {
   namespaced: true,
   state() {
-    return {
-      userInfo: {},
-      signupInfo: {},
-    };
+    return {};
   },
   mutations: {
-    setUser(state, token) {
-      localStorage.setItem("token", JSON.stringify(token));
-      state.userInfo = token;
-    },
     addRecentUser(_, userEmail) {
       let recentUsers = JSON.parse(localStorage.getItem("recentUsers")) || [];
       const isExist = recentUsers.some((email) => email === userEmail);
@@ -24,42 +19,32 @@ export default {
         localStorage.setItem("recentUsers", JSON.stringify(recentUsers));
       }
     },
-    setSignup(state, payload) {
-      state.signupInfo = payload;
-    },
   },
   getters: {
-    isAuthenticated(state) {
-      return Object.keys(state.userInfo).length > 0;
-    },
     getRecentUsers() {
       return JSON.parse(localStorage.getItem("recentUsers")) || [];
     },
     getLoading(state) {
       return state.isLoading;
     },
-    getSignup(state) {
-      return state.signupInfo;
-    },
-    getUserInfo(state) {
-      return state.userInfo;
-    },
-  },
-  actions: {
-    pushSignupInfo(context, payload) {
-      try {
-        context.commit("setSignup", payload);
+    async isAuthenticated() {
+      const { data, error } = await supabase.auth.getUser();
 
-        return true;
-      } catch (error) {
-        console.log(error);
+      if (error || !data) {
         return false;
+      } else {
+        return true;
       }
     },
-    logOut(context) {
+    async getUserInfo(){
+      const { data: { user } } = await supabase.auth.getUser()      
+      return user
+    }
+  },
+  actions: {
+    async logOut() {
       try {
-        localStorage.removeItem("userInfo");
-        context.commit("setUser", {});
+        await supabase.auth.signOut();
         return true;
       } catch (error) {
         console.log("Failed to log out: ", error);
@@ -67,151 +52,144 @@ export default {
       }
     },
     async LoginAuthentication(context, payload) {
-      const { email, password, isSave } = payload;
       try {
-        // Gửi request lên server để xác thực thông tin đăng nhập
-        const response = await axiosInstance.post(
-          `http://localhost:3000/users/log`,
-          {
-            email,
-            password,
-          }
-        );
-        const { status, token } = response.data;
-        // Nếu status code trả về là 200 thì lưu token vào localStorage và set thời gian hết hạn cho token
-        if (status == "success") {
-          const decoded = jwtDecode(token);
-          const expiration = decoded.exp * 1000;
-          const now = Date.now();
-          const timeUntilExpiration = expiration - now;
-          setTimeout(() => {
-            context.commit("logOut");
-          }, timeUntilExpiration);
-          // Lưu token vào localStorage và set user
-          context.commit("setUser", token);
-          if (isSave) {
-            context.commit("addRecentUser", decoded.email);
-          }
-          return true;
+        const { email, password, isSave } = payload;
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) {
+          console.error("Login failed:", error.message);
+          alert(error.message);
         }
-      } catch (error) {
-        console.log(error);
-        return false;
+        if (data && isSave) {
+          router.push("/home");
+          context.commit("addRecentUser", data.user.email);
+        }
+      } catch (err) {
+        console.error("Unexpected error during login:", err);
       }
     },
     async signUpAction(_, payload) {
       try {
-        const { email, password, info, type } = payload;
-        const response = await axiosInstance.post(
-          `http://localhost:3000/users/reg`,
+        const { email, password, info } = payload;
+        const { exists } = axios.post(
+          `${import.meta.env.VITE_API_URL}/functions/v1/email_checker`,
           {
             email,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
+            },
+          }
+        );
+        if (exists) {
+          console.log("Email already exists");
+          return;
+        }
+        const { data: SignUpData, error: SignupError } =
+          await supabase.auth.signUp({
+            email,
             password,
-            info,
-            type,
-          }
-        );
-        const { status } = response.data;
-        if (status == "success") {
-          return true;
+            options: {
+              emailRedirectTo: `${import.meta.env.VITE_DOMAIN}/verify-status`,
+            },
+          });
+        if (SignupError) {
+          console.log("Sign up failed: ", SignupError);
+          return;
         }
-      } catch (error) {
-        return error.response.data.message;
-      }
-    },
-    async sendEmail(_, payload) {
-      try {
-        const response = await axiosInstance.post(
-          `http://localhost:3000/email/send-verification`,
-          {
-            email: payload.email,
-            message: payload.message,
-          }
-        );
-        if (response.status == 200) {
-          return true;
-        }
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
-    },
-    async changePassword(_, payload) {
-      try {
-        const response = await axiosInstance.post(
-          `http://localhost:3000/users/changepass`,
-          {
-            email: payload.email,
-            newPassword: payload.newPassword,
-          }
-        );
-        if (response.status == 200) {
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
-    },
-    async verifyAction(_, payload) {
-      try {
-        const response = await axiosInstance.get(
-          `http://localhost:3000/email/verify?token=${payload.token}`
-        );
-        const { message, status } = response.data;
 
-        return {
-          message,
-          status,
+        const data = {
+          ...info,
+          email,
+          user_id: SignUpData.user.id,
         };
-      } catch (error) {
-        return error.response.data;
-      }
-    },
-    autoLogin(context) {
-      try {
-        const token = JSON.parse(localStorage.getItem("token"));
-        if (!token) return false;
-        if (Object.keys(token).length == 0) return false;
-
-        const userInfo = jwtDecode(token);
-        // Kiểm tra thời gian hết hạn của token
-        const expiration = userInfo.exp * 1000;
-        const now = Date.now();
-        const timeUntilExpiration = expiration - now;
-        if (timeUntilExpiration > 0) {
-          // Nếu token chưa hết hạn thì set lại thời gian hết hạn
-          setTimeout(() => {
-            context.commit("logOut");
-          }, timeUntilExpiration);
-          context.commit("setUser", token);
-          return true;
-        }
-        // Nếu token đã hết hạn thì xóa token và thông tin user
-        localStorage.removeItem("userInfo");
-        return false;
-      } catch (error) {
-        console.log("Failed to auto login: ", error);
-        localStorage.removeItem("userInfo");
-        return false;
-      }
-    },
-    async getInfo(_, identifiers) {
-      try {
-        if (!identifiers) return;
-
-        const response = await axiosInstance.post(
-          `http://localhost:3000/users/info`,
+        const { data: CreateData, error: CreateError } = await supabase.rpc(
+          "create_profiles",
           {
-            identifiers,
+            data,
           }
         );
+        if (CreateError) {
+          console.error(CreateError);
+          return;
+        }
 
-        return response.data;
+        router.push("/verify");
+        localStorage.setItem("signUpInfo", email);
       } catch (error) {
-        console.log("failed for get info" + error);
+        console.log(error);
+
+        return error;
+      }
+    },
+    async autoLogin() {
+      const supabaseCookies = Cookies.get("supabase.auth.token");
+      if (!supabaseCookies) return;
+      const loginSession = JSON.parse(supabaseCookies);
+      if (!loginSession) return;
+      const { access_token, refresh_token } = loginSession;
+      const { data, error } = await supabase.auth.setSession({
+        access_token,
+        refresh_token,
+      });
+      if (error) {
+        console.error("Lỗi khi khôi phục session:", error);
+      } else {
+        // xóa signUp info khi đã đăng ký thành công
+        localStorage.removeItem("signUpInfo");
+        return data;
+      }
+    },
+    async sendEmail(_, email) {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email,
+      });
+      if (error) {
+        console.error("Error resending verification email:", error.message);
         return false;
+      } else {
+        return true;
+      }
+    },
+    async getInfobyId(_, id) {
+      if (!id) return;
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("user_id, firstname, surname, avatar, email")
+          .eq("user_id", id);
+
+        if (error) {
+          console.log("Fail to get infoid data:", error);
+          return false;
+        } else {
+          return data[0];
+        }
+      } catch (error) {
+        console.log("Unexpected error during getUser", error);
+      }
+    },
+    async getInfo(_, emails) {
+      if (!emails) return;
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("user_id, firstname, surname, avatar, email")
+          .in("email", emails);
+
+        if (error) {
+          console.log("Fail to get data:", error);
+          return false;
+        } else {
+          return data;
+        }
+      } catch (error) {
+        console.log("Unexpected error during getUser", error);
       }
     },
   },

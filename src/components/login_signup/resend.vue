@@ -1,13 +1,7 @@
 <template>
-  <a
-    href="#"
-    @click="handleSend(props.second)"
-    class="text-md text-blue-500 hover:underline"
-    :class="{
-      'text-gray-400 cursor-default hover:no-underline': time != 0,
-    }"
-    >Resend email {{ time == 0 ? "" : `(${time})` }}</a
-  >
+  <a href="#" @click="handleSend(props.second)" class="text-md text-blue-500 hover:underline" :class="{
+    'text-gray-400 cursor-default hover:no-underline': time != 0,
+  }">Resend email {{ time == 0 ? "" : `(${time})` }}</a>
 </template>
 
 <script setup>
@@ -44,6 +38,7 @@ async function handleSend(number) {
   // khoá nút send ngay khi bấm, nếu không sẽ bị bấm vào nhiều lần
   time.value = "Sending...";
   // Khi gửi xong sẽ setTime
+
   const sendAction = await store.dispatch("auth/sendEmail", props.info);
   if (sendAction) {
     setTime(number);

@@ -1,83 +1,47 @@
 <template>
-  <div
-    @click="hanlderClose"
-    class="flex justify-center items-center fixed w-screen h-screen bg-black/75 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
-  >
-    <div
-      @click.stop
-      class="scroll-container overflow-y-scroll relative min-w-1/3 p-3 h-[28rem] rounded-xl bg-white dark:bg-dark-second"
-    >
+  <div @click="hanlderClose"
+    class="flex justify-center items-center fixed w-screen h-screen bg-black/75 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+    <div @click.stop
+      class="scroll-container overflow-y-scroll relative min-w-1/3 p-3 h-[28rem] rounded-xl bg-white dark:bg-dark-second">
       <ul class="font-bold text-lg text-md dark:text-primary-txt flex">
         <div>
-          <li
-            @click="handleActive('All')"
-            :class="activeEmotion === 'All' ? 'text-blue-600' : ''"
-            class="hover:bg-gray-100 dark:hover:bg-dark-third cursor-pointer p-4 rounded-xl"
-          >
+          <li @click="handleActive('All')" :class="activeEmotion === 'All' ? 'text-blue-600' : ''"
+            class="hover:bg-gray-100 dark:hover:bg-dark-third cursor-pointer p-4 rounded-xl">
             All
           </li>
-          <div
-            v-if="activeEmotion == 'All'"
-            class="h-1 w-full bg-blue-600 rounded-lg"
-          ></div>
+          <div v-if="activeEmotion == 'All'" class="h-1 w-full bg-blue-600 rounded-lg"></div>
         </div>
-        <div v-for="react in reactsSort" :key="react.type">
-          <li
-            v-if="react.userId?.length > 0"
-            @click="handleActive(react.type)"
-            :class="activeEmotion === react.type ? 'text-blue-600' : ''"
-            class="flex justify-center items-center gap-1 hover:bg-gray-100 dark:hover:bg-dark-third cursor-pointer p-4 rounded-xl"
-          >
-            <i :class="iconMap[react.type]"></i>
+        <div v-for="react in reactsSort" :key="react.react">
+          <li v-if="react.userId?.length > 0" @click="handleActive(react.react)"
+            :class="activeEmotion === react.react ? 'text-blue-600' : ''"
+            class="flex justify-center items-center gap-1 hover:bg-gray-100 dark:hover:bg-dark-third cursor-pointer p-4 rounded-xl">
+            <i :class="iconMap[react.react]"></i>
 
             {{ formatCount(react.userId?.length) }}
           </li>
-          <div
-            v-if="activeEmotion == react.type"
-            class="h-1 w-full bg-blue-600 rounded-lg"
-          ></div>
+          <div v-if="activeEmotion == react.react" class="h-1 w-full bg-blue-600 rounded-lg"></div>
         </div>
       </ul>
-      <i
-        class="fa-solid top-5 right-2 hover:opacity-50 cursor-pointer fa-circle-xmark text-4xl absolute"
-        style="color: #adadad"
-        @click="hanlderClose"
-      ></i>
+      <i class="fa-solid top-5 right-2 hover:opacity-50 cursor-pointer fa-circle-xmark text-4xl absolute"
+        style="color: #adadad" @click="hanlderClose"></i>
       <div class="flex justify-start gap-3 mt-3 flex-col">
         <loading_spinner v-if="isLoadingUser"></loading_spinner>
-        <div
-          v-else
-          class="gap-3 flex-col flex"
-          v-for="(user, index) in users[activeEmotion]"
-          :key="index"
-        >
-          <div
-            class="flex justify-between items-center w-full"
-            v-for="userInfo in user.userData"
-            :key="userInfo._id"
-          >
+        <div v-else class="gap-3 flex-col flex" v-for="(user, index) in getReact" :key="index">
+          <div class="flex justify-between items-center w-full" v-for="userInfo in user.userData" :key="userInfo.id">
             <div class="flex items-center gap-4 relative group cursor-pointer">
-              <img
-                :src="userInfo.avatar"
-                class="w-10 h-10 rounded-full object-cover"
-                alt="User avatar"
-              />
-              <span
-                class="text-base text-black font-bold dark:text-primary-txt group-hover:underline"
-              >
+              <img :src="userInfo.avatar" class="w-10 h-10 rounded-full object-cover" alt="User avatar" />
+              <span class="text-base text-black font-bold dark:text-primary-txt group-hover:underline">
                 {{
-                  userInfo.info.firstName + " " + userInfo.info.surName
-                }}</span
-              >
+                  userInfo.firstname + " " + userInfo.surname
+                }}</span>
               <div
-                class="absolute flex justify-center items-center top-5 left-7 bg-white dark:bg-dark-second w-6 h-6 rounded-2xl"
-              >
-                <i :class="iconMap[user.type]"></i>
+                class="absolute flex justify-center items-center top-5 left-7 bg-white dark:bg-dark-second w-6 h-6 rounded-2xl">
+
+                <i :class="iconMap[user.react]"></i>
               </div>
             </div>
             <button
-              class="p-2 text-sm px-3 text-black font-semibold dark:text-black cursor-pointer bg-primary-txt rounded-xl hover:opacity-80"
-            >
+              class="p-2 text-sm px-3 text-black font-semibold dark:text-black cursor-pointer bg-primary-txt rounded-xl hover:opacity-80">
               <i class="fa-solid fa-user-plus"></i>
               Add friend
             </button>
@@ -103,7 +67,7 @@ const hanlderClose = () => {
 // hanlde UI
 const iconMap = {
   like: "fa-solid fa-thumbs-up text-[#146eeb]",
-  heart: "fa-solid fa-heart text-[#ed384f]",
+  love: "fa-solid fa-heart text-[#ed384f]",
   haha: "fa-solid fa-laugh-squint text-[#FFD43B]",
   wow: "fa-solid fa-face-surprise text-[#FFD43B]",
   sad: "fa-solid fa-face-sad-tear text-[#FFD43B]",
@@ -121,37 +85,32 @@ const handleActive = (emotion) => {
 // hanlde data
 function hanldeReactData(reactList) {
   const reactUsers = reactList.reduce((acc, react) => {
-    acc[react.type] = (acc[react.type] || []).concat(react.user_id);
+    acc[react.react] = (acc[react.react] || []).concat(react.user_id);
     return acc;
   }, {});
+
   return [
-    { type: "like", userId: reactUsers.like },
-    { type: "heart", userId: reactUsers.heart },
-    { type: "haha", userId: reactUsers.haha },
-    { type: "wow", userId: reactUsers.wow },
-    { type: "sad", userId: reactUsers.sad },
-    { type: "angry", userId: reactUsers.angry },
+    { react: "like", userId: reactUsers.like },
+    { react: "love", userId: reactUsers.love },
+    { react: "haha", userId: reactUsers.haha },
+    { react: "wow", userId: reactUsers.wow },
+    { react: "sad", userId: reactUsers.sad },
+    { react: "angry", userId: reactUsers.angry },
   ];
 }
 
 // sort react data
+
 const reactsSort = hanldeReactData(props.reacts).sort(
   (a, b) => (b.userId ? b.userId.length : 0) - (a.userId ? a.userId.length : 0)
 );
 
 // load user
 // declare varible save user info to avoid load user many times
-const users = reactive({
-  like: [],
-  heart: [],
-  haha: [],
-  wow: [],
-  sad: [],
-  angry: [],
-  All: [],
-});
+const allReact = ref([])
+const getReact = ref()
 async function getUsers(userId) {
-  const user = await store.dispatch("auth/getInfo", userId);
+  const user = await store.dispatch("auth/getInfobyId", userId);
   return user;
 }
 const isLoadingUser = ref(false);
@@ -159,41 +118,39 @@ const isLoadingUser = ref(false);
 watch(
   activeEmotion,
   async (newVal) => {
-    if (users[newVal].length === 0) {
+    if (allReact.value.length === 0) {
       isLoadingUser.value = true;
-      if (newVal !== "All") {
-        // Lấy userId của react type
-        const userId = reactsSort.filter((react) => react.type === newVal)[0]
-          .userId;
-        const userData = await getUsers(userId);
-        // Swich to array to show in UI
-        users[newVal] = [
-          {
-            userData,
-            type: newVal,
-          },
-        ];
-      } else {
-        // Bỏ những react count = 0
+      // Bỏ những react count = 0
+      const filterReact = reactsSort.filter((react) =>
+        Array.isArray(react.userId)
+      );
 
-        const filterReact = reactsSort.filter((react) =>
-          Array.isArray(react.userId)
-        );
+      // Lấy thông tin user
+      allReact.value = await Promise.all(
+        filterReact.map(async (react) => {
+          if (react.userId.length > 0) {
 
-        // Lấy thông tin user
-        users[newVal] = await Promise.all(
-          filterReact.map(async (react) => {
-            if (react.userId.length > 0) {
-              const userData = await getUsers(react.userId);
-              return {
-                userData: userData,
-                type: react.type,
-              };
-            }
-          })
-        );
-      }
+            const userData = await Promise.all(
+              react.userId.map(id => getUsers(id))
+            )
+
+            return {
+              userData: userData,
+              react: react.react,
+            };
+          }
+        })
+      );
     }
+    // đã có all react chỉ cần lọc ra react mong muốn
+    getReact.value = allReact.value.filter(reactObject => {
+      if (newVal == 'All') {
+        return reactObject
+      }
+      if (reactObject.react == newVal) {
+        return reactObject
+      }
+    })
     isLoadingUser.value = false;
   },
   { immediate: true }

@@ -2,66 +2,41 @@
   <card title="Verify status">
     <template #body>
       <div>
-        <p v-if="message">{{ message }}</p>
-        <p v-else>Some thing went wrong please try again later</p>
+        <p v-if="error">{{ errorMessage }}</p>
+        <p v-else>Something when wrong!</p>
       </div>
     </template>
     <template #footer>
       <div class="flex justify-center">
-        <baseButton class="bg-blue-500 text-white" push="/login">
-          Back to login</baseButton
-        >
+        <base_button class="bg-blue-500 text-white" push="/login">
+          Back to login</base_button>
       </div>
     </template>
   </card>
 </template>
 
 <script setup>
-import baseButton from "../../components/base_button.vue";
-import { onMounted, ref, defineProps } from "vue";
-import { useStore } from "vuex";
-import card from "../../components/login_signup/card.vue";
-const props = defineProps(["token"]);
-const store = useStore();
-async function callVerifyAction(token) {
-  try {
-    // Gọi verify
-    const verifyAction = await store.dispatch("auth/verifyAction", {
-      token,
-    });
-    
-    // Nếu verify thành công gọi sign up
-    if (verifyAction.status == "success") {      
-      const userInfo = JSON.parse(localStorage.getItem("signUpInfo"));
-      const signup = await store.dispatch("auth/signUpAction", {
-        ...userInfo,
-        type: 'reg'
-      });            
-      if (signup == true) {
-        // sign up thành công thì gửi message thành công
-        localStorage.removeItem("signUpInfo");
-        return verifyAction.message;
-      } else {
-        return signup;
-      }
-    }
-    // Nếu không gửi message thất bại
-    localStorage.removeItem("signUpInfo");
-    return verifyAction.message;
-  } catch (error) {
-    console.log(error.data);
+import base_button from '../../components/base_button.vue'
+import card from '../../components/login_signup/card.vue'
+import { defineProps } from 'vue';
+
+
+// Định nghĩa các props nhận từ route
+const props = defineProps(['error', 'errorCode', 'errorDescription'
+]);
+
+
+
+// Tạo thông điệp lỗi tùy thuộc vào mã lỗi
+let errorMessage = "";
+if (props.error) {
+  if (props.errorCode === "otp_expired") {
+    errorMessage = "Liên kết xác thực đã hết hạn. Vui lòng yêu cầu một liên kết mới.";
+  } else if (props.errorCode === "access_denied") {
+    errorMessage = "Liên kết xác thực không hợp lệ hoặc đã được sử dụng.";
+  } else {
+    errorMessage = "Đã xảy ra lỗi khi xác thực. Vui lòng thử lại.";
   }
 }
-let message = ref("");
-onMounted(async () => {
-  if (props.token) {
-    try {
-      message.value = await callVerifyAction(props.token);
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    console.log("token not found");
-  }
-});
+
 </script>

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { jwtDecode } from "jwt-decode";
+import supabase from "./composables/supabase";
 import home from "./views/home.vue";
 import login from "./views/auth/login.vue";
 import signup from "./views/auth/signup.vue";
@@ -34,11 +35,15 @@ const router = createRouter({
       component: verify,
       name: "verify",
       beforeEnter: (to, from, next) => {
-        const user = JSON.parse(localStorage.getItem("signUpInfo"));
-        if (!user) {
+        const email = localStorage.getItem("signUpInfo");
+        try {
+          if (email) {
+            next();
+          } else {
+            next("/notFound");
+          }
+        } catch {
           next("/notFound");
-        } else {
-          next();
         }
       },
     },
@@ -46,15 +51,26 @@ const router = createRouter({
       path: "/verify-status",
       component: verifyStatus,
       name: "verifyStatus",
-      props: (route) => ({
-        token: route.query.token,
-      }),
+      props: (route) => {
+        const hash = route.hash;
+        const params = new URLSearchParams(hash.slice(1));
+        return {
+          error: params.get("error"),
+          errorCode: params.get("error_code"),
+          errorDescription: params.get("error_description"),
+        };
+      },
       beforeEnter: (to, from, next) => {
-        const { token } = to.query;
-        if (token) {
-          next();
-        } else {
-          next("/verify");
+        const hash = route.hash;
+        const params = new URLSearchParams(hash.slice(1));
+        try {
+          if (params) {
+            next();
+          } else {
+            next("/notFound");
+          }
+        } catch {
+          next("/notFound");
         }
       },
     },

@@ -2,17 +2,10 @@
   <section>
     <div class="bg-[#f0f2f5] pb-16">
       <div class="logo">
-        <img
-          class="w-80 m-auto"
-          src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg"
-          alt=""
-        />
+        <img class="w-80 m-auto" src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg" alt="" />
       </div>
-      <form
-        @submit.prevent="onSubmit"
-        class="shadow-xl w-1/3 m-auto bg-white rounded"
-        style="box-shadow: 0 1px 8px 5px #dddfe2"
-      >
+      <form @submit.prevent="onSubmit" class="shadow-xl w-1/3 m-auto bg-white rounded"
+        style="box-shadow: 0 1px 8px 5px #dddfe2">
         <div class="border-b-[1px] border-gray text-center p-4">
           <h1 class="text-2xl font-bold">Create a new account</h1>
           <p class="opacity-60">It's quick and easy.</p>
@@ -20,200 +13,101 @@
         <div class="p-4">
           <div class="flex items-center justify-between gap-3 mb-3">
             <div class="input_wrapper relative flex-grow">
-              <input
-                type="text"
-                placeholder="First name"
-                v-model="firstName"
-                v-bind="firstNameProps"
-                class="border p-2 rounded-md min-w-28 w-full"
-                :class="{ 'border-red-500': errors.firstName }"
-              />
-              <i
-                v-if="errors.firstName"
-                class="fa-solid fa-circle-exclamation absolute right-2 top-3"
-                style="color: #a04640"
-              ></i>
+              <input type="text" placeholder="First name" v-model="firstName" v-bind="firstNameProps"
+                class="border p-2 rounded-md min-w-28 w-full" :class="{ 'border-red-500': errors.firstName }" />
+              <i v-if="errors.firstName" class="fa-solid fa-circle-exclamation absolute right-2 top-3"
+                style="color: #a04640"></i>
 
-              <div
-                v-if="errors.firstName"
-                class="before"
-                :style="{
-                  '--before-top': '-4px',
-                  '--before-right': '110%',
-                  '--tranform': ' translateY(-50%)',
-                }"
-              >
+              <div v-if="errors.firstName" class="before" :style="{
+                '--before-top': '-4px',
+                '--before-right': '110%',
+                '--tranform': ' translateY(-50%)',
+              }">
                 {{ errors.firstName }}
               </div>
             </div>
             <div class="input_wrapper relative flex-grow">
-              <input
-                type="text"
-                placeholder="Surname"
-                v-model="surName"
-                v-bind="surNameProps"
-                class="border p-2 rounded-md min-w-28 w-full"
-                :class="{ 'border-red-500': errors.surName }"
-              />
-              <i
-                v-if="errors.surName"
-                class="fa-solid fa-circle-exclamation absolute right-2 top-3"
-                style="color: #a04640"
-              ></i>
-              <div
-                v-if="errors.surName"
-                class="before"
-                :style="{
-                  '--before-top': '130%',
-                  '--before-right': '50%',
-                  '--transform': 'rotate(-90deg)',
-                  '--after-top': '-45%',
-                  '--after-right': '44%',
-                }"
-              >
+              <input type="text" placeholder="Surname" v-model="surName" v-bind="surNameProps"
+                class="border p-2 rounded-md min-w-28 w-full" :class="{ 'border-red-500': errors.surName }" />
+              <i v-if="errors.surName" class="fa-solid fa-circle-exclamation absolute right-2 top-3"
+                style="color: #a04640"></i>
+              <div v-if="errors.surName" class="before" :style="{
+                '--before-top': '130%',
+                '--before-right': '50%',
+                '--transform': 'rotate(-90deg)',
+                '--after-top': '-45%',
+                '--after-right': '44%',
+              }">
                 {{ errors.surName }}
               </div>
             </div>
           </div>
           <p class="text-xs opacity-70 self-start">Date of birth</p>
 
-          <div
-            class="flex items-center justify-between gap-3 mb-3 mt-2 select_wrapper relative"
-          >
-            <select
-              class="border rounded flex-grow h-9 px-2"
-              name="day"
-              v-model="day"
-              :class="{ 'border-red-500': errors.year }"
-            >
+          <div class="flex items-center justify-between gap-3 mb-3 mt-2 select_wrapper relative">
+            <select class="border rounded flex-grow h-9 px-2" name="day" v-model="day"
+              :class="{ 'border-red-500': errors.year }">
               <option v-for="number in 31" :key="number" :value="number">
                 {{ number }}
               </option>
             </select>
 
-            <select
-              class="border rounded flex-grow h-9 px-2"
-              name="month"
-              v-model="month"
-              :class="{ 'border-red-500': errors.year }"
-            >
-              <option
-                v-for="(month, index) in months"
-                :key="month"
-                :value="index"
-              >
+            <select class="border rounded flex-grow h-9 px-2" name="month" v-model="month"
+              :class="{ 'border-red-500': errors.year }">
+              <option v-for="(month, index) in months" :key="month" :value="index">
                 {{ month }}
               </option>
             </select>
-            <select
-              class="border rounded flex-grow h-9 px-2"
-              name="year"
-              v-model="year"
-              v-bind="yearProps"
-              :class="{ 'border-red-500': errors.year }"
-            >
-              <option
-                v-for="number in getFilteredYears()"
-                :value="number"
-                :key="number"
-                v-show="number > 1900"
-              >
+            <select class="border rounded flex-grow h-9 px-2" name="year" v-model="year" v-bind="yearProps"
+              :class="{ 'border-red-500': errors.year }">
+              <option v-for="number in getFilteredYears()" :value="number" :key="number" v-show="number > 1900">
                 {{ number }}
               </option>
             </select>
-            <i
-              v-if="errors.year"
-              class="fa-solid fa-circle-exclamation absolute right-2 top-[-22px]"
-              style="color: #a04640"
-            ></i>
-            <div
-              v-if="errors.year"
-              class="before"
-              :style="{
-                '--before-top': '-10px',
-                '--before-right': '105%',
-                '--tranform': ' translateY(-50%)',
-              }"
-            >
+            <i v-if="errors.year" class="fa-solid fa-circle-exclamation absolute right-2 top-[-22px]"
+              style="color: #a04640"></i>
+            <div v-if="errors.year" class="before" :style="{
+              '--before-top': '-10px',
+              '--before-right': '105%',
+              '--tranform': ' translateY(-50%)',
+            }">
               {{ errors.year }}
             </div>
           </div>
 
           <p class="text-xs opacity-70 self-start">Gender</p>
-          <div
-            class="flex items-center justify-between gap-3 mb-3 mt-2 label_wrapper relative"
-          >
-            <label
-              v-for="(option, index) in genderOptions"
-              :key="option"
-              :for="option"
+          <div class="flex items-center justify-between gap-3 mb-3 mt-2 label_wrapper relative">
+            <label v-for="(option, index) in genderOptions" :key="option" :for="option"
               class="p-2 flex-grow border rounded flex justify-between items-center"
-              :class="{ 'border-red-500': errors.gender }"
-            >
+              :class="{ 'border-red-500': errors.gender }">
               <span>{{ option }}</span>
-              <input
-                type="radio"
-                name="gender"
-                :value="index + 1"
-                v-model="gender"
-                v-bind="genderProps"
-                :id="option"
-              />
+              <input type="radio" name="gender" :value="index + 1" v-model="gender" v-bind="genderProps" :id="option" />
             </label>
-            <i
-              ref="error-icon"
-              v-if="errors.gender"
-              class="fa-solid fa-circle-exclamation absolute right-2 top-[-22px]"
-              style="color: #a04640"
-            ></i>
-            <div
-              ref="error-gender"
-              v-if="errors.gender"
-              class="before"
-              :style="{
-                '--before-top': '-10px',
-                '--before-right': '105%',
-                '--tranform': ' translateY(-50%)',
-              }"
-            >
+            <i ref="error-icon" v-if="errors.gender" class="fa-solid fa-circle-exclamation absolute right-2 top-[-22px]"
+              style="color: #a04640"></i>
+            <div ref="error-gender" v-if="errors.gender" class="before" :style="{
+              '--before-top': '-10px',
+              '--before-right': '105%',
+              '--tranform': ' translateY(-50%)',
+            }">
               {{ errors.gender }}
             </div>
           </div>
           <div v-if="isCustom">
-            <div
-              class="flex items-center justify-between gap-3 mb-1 mt-2 select_wrapper relative"
-            >
-              <select
-                name=""
-                id=""
-                class="border p-2 flex-grow rounded"
-                :class="{ 'border-red-500': errors.custom }"
-                v-model="custom"
-                v-bind="customProps"
-              >
-                <option
-                  :value="index"
-                  :disabled="index == 0"
-                  v-for="(option, index) in customOptions"
-                  :key="option"
-                >
+            <div class="flex items-center justify-between gap-3 mb-1 mt-2 select_wrapper relative">
+              <select name="" id="" class="border p-2 flex-grow rounded" :class="{ 'border-red-500': errors.custom }"
+                v-model="custom" v-bind="customProps">
+                <option :value="index" :disabled="index == 0" v-for="(option, index) in customOptions" :key="option">
                   {{ option }}
                 </option>
               </select>
-              <i
-                v-if="errors.custom"
-                class="fa-solid fa-circle-exclamation absolute right-5 top-3"
-                style="color: #a04640"
-              ></i>
-              <div
-                v-if="errors.custom"
-                class="before"
-                :style="{
-                  '--before-top': '-10px',
-                  '--before-right': '495px',
-                  '--tranform': ' translateY(-50%)',
-                }"
-              >
+              <i v-if="errors.custom" class="fa-solid fa-circle-exclamation absolute right-5 top-3"
+                style="color: #a04640"></i>
+              <div v-if="errors.custom" class="before" :style="{
+                '--before-top': '-10px',
+                '--before-right': '495px',
+                '--tranform': ' translateY(-50%)',
+              }">
                 {{ errors.custom }}
               </div>
             </div>
@@ -221,67 +115,37 @@
               Your pronoun is visible to everyone.
             </p>
             <div class="flex items-center justify-between gap-3 mb-3 mt-2">
-              <input
-                type="text"
-                class="border p-2 rounded flex-grow"
-                placeholder="Gender (optional)"
-                v-model="customOptional"
-              />
+              <input type="text" class="border p-2 rounded flex-grow" placeholder="Gender (optional)"
+                v-model="customOptional" />
             </div>
           </div>
 
           <div class="flex items-center justify-between gap-3 mb-3 mt-2">
             <div class="input_wrapper flex-grow relative">
-              <input
-                type="text"
-                v-model="email"
-                v-bind="emailProps"
-                placeholder="Email address"
-                class="border w-full rounded p-2 min-w-28"
-                :class="{ 'border-red-500': errors.email }"
-              />
-              <i
-                v-if="errors.email"
-                class="fa-solid fa-circle-exclamation absolute right-2 top-3"
-                style="color: #a04640"
-              ></i>
-              <div
-                v-if="errors.email"
-                class="before"
-                :style="{
-                  '--before-top': '-10px',
-                  '--before-right': '104%',
-                  '--tranform': ' translateY(-50%)',
-                }"
-              >
+              <input type="text" v-model="email" v-bind="emailProps" placeholder="Email address"
+                class="border w-full rounded p-2 min-w-28" :class="{ 'border-red-500': errors.email }" />
+              <i v-if="errors.email" class="fa-solid fa-circle-exclamation absolute right-2 top-3"
+                style="color: #a04640"></i>
+              <div v-if="errors.email" class="before" :style="{
+                '--before-top': '-10px',
+                '--before-right': '104%',
+                '--tranform': ' translateY(-50%)',
+              }">
                 {{ errors.email }}
               </div>
             </div>
           </div>
           <div class="flex items-center justify-between gap-3 mb-3 mt-2">
             <div class="input_wrapper flex-grow relative">
-              <input
-                type="password"
-                placeholder="New password"
-                v-model="password"
-                v-bind="passwordProps"
-                class="border w-full rounded p-2 min-w-28"
-                :class="{ 'border-red-500': errors.password }"
-              />
-              <i
-                v-if="errors.password"
-                class="fa-solid fa-circle-exclamation absolute right-2 top-3"
-                style="color: #a04640"
-              ></i>
-              <div
-                v-if="errors.password"
-                class="before"
-                :style="{
-                  '--before-top': '-6px',
-                  '--before-right': '104%',
-                  '--tranform': ' translateY(-50%)',
-                }"
-              >
+              <input type="password" placeholder="New password" v-model="password" v-bind="passwordProps"
+                class="border w-full rounded p-2 min-w-28" :class="{ 'border-red-500': errors.password }" />
+              <i v-if="errors.password" class="fa-solid fa-circle-exclamation absolute right-2 top-3"
+                style="color: #a04640"></i>
+              <div v-if="errors.password" class="before" :style="{
+                '--before-top': '-6px',
+                '--before-right': '104%',
+                '--tranform': ' translateY(-50%)',
+              }">
                 {{ errors.password }}
               </div>
             </div>
@@ -303,19 +167,14 @@
               time.
             </p>
           </div>
-          <button
-            type="submit"
-            :class="{ '!bg-gray-500': isLoading }"
-            class="rounded text-white bg-[#00a400] block px-16 py-1 text-lg font-bold m-auto my-6 hover:bg-[rgb(0,160,0)]"
-          >
+          <button type="submit" :class="{ '!bg-gray-500': isLoading }"
+            class="rounded cursor-pointer text-white bg-[#00a400] block px-16 py-1 text-lg font-bold m-auto my-6 hover:bg-[rgb(0,160,0)]">
             <span v-if="!isLoading">Sign up</span>
-            <loading-spinner v-else></loading-spinner>
+            <loading_spinner v-else></loading_spinner>
           </button>
-          <a
-            @click="$router.push('/login')"
-            class="text-lg text-[#1877f2] cursor-pointer block text-center mb-3 hover:underline"
-            >Already have an account?</a
-          >
+          <a @click="$router.push('/login')"
+            class="text-lg text-[#1877f2] cursor-pointer block text-center mb-3 hover:underline">Already have an
+            account?</a>
         </div>
       </form>
     </div>
@@ -330,6 +189,7 @@ import { useRouter } from "vue-router";
 import baseFooter from "../../components/login_signup/footer.vue";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
+import loading_spinner from "../../components/loading/loading_spinner.vue";
 
 // declare tools
 const store = useStore();
@@ -458,7 +318,8 @@ const [surName, surNameProps] = defineField("surName");
 const [gender, genderProps] = defineField("gender");
 const [custom, customProps] = defineField("custom");
 const [year, yearProps] = defineField("year");
-
+// handle loading
+const isLoading = ref(false);
 const onSubmit = handleSubmit(async (values) => {
   if (values.gender == 3) {
     delete values.gender;
@@ -469,56 +330,49 @@ const onSubmit = handleSubmit(async (values) => {
     email: values.email,
     password: values.password,
     info: {
-      firstName: values.firstName,
-      surName: values.surName,
+      firstname: values.firstName,
+      surname: values.surName,
       gender: values.gender,
-      born: `${day.value}/${month.value}/${values.year}`,
+      birthday: `${values.year}-${month.value}-${day.value}`,
     },
   };
-  localStorage.setItem("signUpInfo", JSON.stringify(signUpInfo));
-  const isExits = await store.dispatch("auth/signUpAction", {
-    ...signUpInfo,
-    type: "check",
-  });
-  if (isExits == true) {
-    const isSendemailSuccess = await store.dispatch(
-      "auth/sendEmail",
-      signUpInfo
-    );
-    if (isSendemailSuccess) {
-      route.push(`/verify`);
-    } else {
-      console.log("Send email failed");
-    }
-  } else {
-    alert(isExits);
-  }
+  isLoading.value = true;
+  store.dispatch(
+    'auth/signUpAction',
+    signUpInfo
+  )
+  isLoading.value = false;
+
 });
 // End validate
-// handle loading
-const isLoading = computed(() => store.state.isLoading);
+
 </script>
 
 <style>
-.label_wrapper select:focus ~ i {
+.label_wrapper select:focus~i {
   display: none;
 }
-.select_wrapper select:focus ~ i {
+
+.select_wrapper select:focus~i {
   display: none;
 }
-.input_wrapper input:focus ~ i {
+
+.input_wrapper input:focus~i {
   display: none;
 }
-.label_wrapper label input:focus ~ .before {
+
+.label_wrapper label input:focus~.before {
   display: block;
 }
 
-.select_wrapper select:focus ~ .before {
+.select_wrapper select:focus~.before {
   display: block;
 }
-.input_wrapper input:focus ~ .before {
+
+.input_wrapper input:focus~.before {
   display: block;
 }
+
 .before {
   z-index: 1;
   display: none;
@@ -534,6 +388,7 @@ const isLoading = computed(() => store.state.isLoading);
   max-width: 400px;
   font-size: 14px;
 }
+
 .before::after {
   content: "";
   position: absolute;
@@ -542,6 +397,7 @@ const isLoading = computed(() => store.state.isLoading);
   transform: var(--transform, 0deg);
   border-width: 12px;
   border-style: solid;
-  border-color: transparent transparent transparent #be4b49; /* Màu của mũi tên */
+  border-color: transparent transparent transparent #be4b49;
+  /* Màu của mũi tên */
 }
 </style>

@@ -1,4 +1,4 @@
-import axiosInstance from "./setLoading";
+import supabase from "../composables/supabase";
 export default {
   namespaced: true,
   state() {
@@ -8,37 +8,24 @@ export default {
   getters: {},
   actions: {
     async getFriends(_, email) {
-      try {
-        if (!email) return;
-        const response = await axiosInstance.post(
-          "http://localhost:3000/users/friends-list",
-          {
-            email,
-          }
-        );
-        const { friends } = response.data;
-        return friends;
-      } catch (error) {
-        console.log("failed to get friends ", error);
-
-        return false;
+      if (!email) return;
+      const { data, error } = await supabase
+        .from("profiles") // hoặc 'users' tùy theo tên bảng của bạn
+        .select("friends")
+        .eq("email", email);
+      if (error) {
+        console.log("fail to get friends");
+      } else {
+        return data;
       }
     },
-    async getPosts(_, user_id) {
-      try {
-        if (!user_id) return;
-        const response = await axiosInstance.post(
-          "http://localhost:3000/posts/get-posts",
-          {
-            user_id,
-          }
-        );
-        const { postsWithComments } = response.data;
-        return postsWithComments;
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
+    
+    async getPosts(_, input_user_id) {
+      const { data, error } = await supabase.functions.invoke("fpgrowth", {
+        body: { input_user_id },
+      });
+      if (error) console.error(error);
+      else return data.posts;
     },
   },
 };

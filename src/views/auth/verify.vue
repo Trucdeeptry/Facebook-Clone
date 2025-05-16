@@ -2,20 +2,20 @@
   <div>
     <card title="Verify your email">
       <template #body>
-        <div class="main text-lg">
+        <div class="main text-lg" v-if="signupInfo">
           <p>Please check your emails for a message with your verify url.</p>
           <p>
-            We sent your code to: <b>{{ signupInfo?.email }}</b>
+            We sent your code to: <b>{{ signupInfo }}</b>
           </p>
         </div>
+        
       </template>
       <template #footer>
         <div class="content_footer flex justify-between items-center">
           <resend second="60" :info="signupInfo"></resend>
           <div class="button-group text-md flex items-center gap-3">
             <baseButton class="bg-blue-500 text-white" push="/login">
-              Back to login</baseButton
-            >
+              Back to login</baseButton>
           </div>
         </div>
       </template>
@@ -45,6 +45,6 @@ onMounted(() => {
       router.push("/login");
     }
   });
-  signupInfo.value = JSON.parse(localStorage.getItem("signUpInfo"));
+  signupInfo.value = localStorage.getItem("signUpInfo");
 });
 </script>

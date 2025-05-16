@@ -1,5 +1,6 @@
 <template>
-  <div class="px-4 mt-4 shadow rounded-lg bg-white dark:bg-dark-second">
+  <!-- post form -->
+  <div class="px-4 shadow rounded-lg bg-white dark:bg-dark-second">
     <div
       class="p-2 border-b border-gray-300 dark:border-dark-third flex space-x-4 items-center"
     >
@@ -10,7 +11,7 @@
       />
       <input
         type="text"
-        :placeholder="`What's on your mind, ${user.info.surName}?`"
+        :placeholder="`What's on your mind, ${user.surname}?`"
         readonly
         @click="isModalOpen = true"
         class="flex-1 dark:hover:bg-dark-hover  cursor-pointer hover:bg-gray-200 bg-gray-100 dark:text-primary-txt rounded-full flex items-center py-2 justify-start pl-4 dark:bg-dark-third text-lg"
@@ -59,6 +60,7 @@
       :isModalOpen="isModalOpen"
     ></create_post>
   </div>
+  <!-- end post form -->
 </template>
 
 <script setup>

@@ -4,56 +4,33 @@
     <slot></slot>
     <form @submit.prevent="login">
       <div class="space" v-show="!EmailInputText">
-        <input
-          v-model="user.email"
-          type="text"
-          class="email-box"
-          placeholder="Email address or phone number"
-        />
+        <input v-model="user.email" type="text" class="email-box" placeholder="Email address or phone number" />
       </div>
       <!-- slot for avatar -->
       <slot name="avatar"></slot>
       <div>
         <div class="space">
-          <password-input
-            v-model="user.password"
-            class="w-full"
-          ></password-input>
+          <password-input v-model="user.password" class="w-full"></password-input>
         </div>
       </div>
       <!-- slot remember password in add account -->
       <div class="space !justify-start my-3 ml-1" v-if="isShowRemember">
         <input type="checkbox" :id="uniqueId" v-model="isSave" class="w-4" />
-        <label :for="uniqueId" class="text-base opacity-70 ml-3"
-          >Rememer password</label
-        >
+        <label :for="uniqueId" class="text-base opacity-70 ml-3">Rememer password</label>
       </div>
       <div class="space">
-        <button
-          type="submit"
-          :class="{ '!bg-gray-500': isLoading }"
-          :disabled="isLoading"
-          class="login-button h-12 flex justify-center items-center"
-        >
+        <button type="submit" :class="{ '!bg-gray-500': isLoading }" :disabled="isLoading"
+          class="login-button h-12 flex justify-center items-center">
           <loading-spinner v-if="isLoading"></loading-spinner>
           <b v-else>Log in</b>
         </button>
       </div>
       <div class="spaceTwo adjustTwo text-center">
-        <a
-          href="#"
-          @click="$router.push('/forgot-find')"
-          class="adjust-forgot-pw"
-          >Forgotten password?</a
-        >
+        <a href="#" @click="$router.push('/forgot-find')" class="adjust-forgot-pw">Forgotten password?</a>
       </div>
       <div v-if="isShowSignup">
         <div class="line"></div>
-        <button
-          type="button"
-          class="create-button"
-          @click="$router.push('/signup')"
-        >
+        <button type="button" class="create-button" @click="$router.push('/signup')">
           <b>Create New Account</b>
         </button>
       </div>
@@ -74,27 +51,23 @@ const router = useRouter();
 // declare user
 const user = reactive({
   email: "",
-  password: "",
+  password: "9942994Ngoc",
 });
 
 // hanlde login
 const isSave = ref(true);
-async function login() {
+function login() {
   const loginInfo = {
     email: user.email,
     password: user.password,
     isSave: isSave.value,
   };
 
-  const isLoginSuccess = await store.dispatch(
+  store.dispatch(
     "auth/LoginAuthentication",
     loginInfo
   );
-  if (isLoginSuccess) {
-    router.push("/home");
-  } else {
-    alert("Login failed, please check email and password");
-  }
+
 }
 // hanlde when users login with recent login
 if (props.EmailInputText) {
@@ -102,7 +75,7 @@ if (props.EmailInputText) {
 }
 // hanlde loading
 const isLoading = computed(() => store.state.isLoading);
-// handle id when use this form many times in 1 views
+// handle id when use this form many times in 1 view
 const uniqueId = Math.random().toString(36).substr(2, 9);
 </script>
 
@@ -134,11 +107,13 @@ anyway I added that sparking dots gif in my footer.
   padding-top: 72px;
   min-width: 500px;
 }
+
 #toggleEyeIcon:hover {
   background-color: rgb(27, 29, 32, 0.1);
 
   border-radius: 100%;
 }
+
 .big-box {
   display: block;
   width: 1262px;
@@ -399,9 +374,11 @@ footer {
   margin-top: 0px;
   margin-bottom: 0px;
 }
+
 .add_account:hover {
   box-shadow: 0 1px 8px 5px #dddfe2 !important;
 }
+
 .add_account {
   transition: all 0.2s ease-out;
 }

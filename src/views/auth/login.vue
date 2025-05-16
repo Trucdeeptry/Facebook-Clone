@@ -3,73 +3,43 @@
   <div v-else>
     <div class="contains-top-half-and-footer-bottom-half">
       <div class="global-container">
-        <div
-          class="bigger-box"
-          style="background-size: cover; background-color: #f2f4f7"
-        >
+        <div class="bigger-box" style="background-size: cover; background-color: #f2f4f7">
           <div class="big-box">
             <div class="left-box">
-              <img
-                class="fb-logo"
-                src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg"
-                alt=""
-                style="
+              <img class="fb-logo" src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg" alt="" style="
                   width: 60%;
 
                   margin-bottom: 0px;
                   margin-bottom: -14px;
-                "
-              />
+                " />
 
-              <h2
-                class="logo-caption"
-                style="padding: 0; font-size: 36px; color: #333"
-              >
+              <h2 class="logo-caption" style="padding: 0; font-size: 36px; color: #333">
                 Recent logins
               </h2>
               <p style="color: #606770">Click your picture or add an account</p>
-              <div
-                class="recent_login mt-7 flex flex-wrap items-center justify-start gap-3"
-              >
-                <div
-                  class="account_logged add_account relative group"
-                  v-for="user in recentUsers"
-                  :key="user.email"
+              <div class="recent_login mt-7 flex flex-wrap items-center justify-start gap-3">
+                <div class="account_logged add_account relative group" v-for="user in recentUsers" :key="user.email"
                   @click="
                     isOpenUserForm = true;
                     userSelected = user;
-                  "
-                >
-                  <i
-                    @click.stop="removeAccount(user.email)"
-                    class="absolute group-hover:scale-150 group-hover:text-white origin-bottom-right fa-solid fa-circle-xmark text-lg left-1 transition-all cursor-pointer"
-                  ></i>
+                  ">
+                  <i @click.stop="removeAccount(user.email)"
+                    class="absolute group-hover:scale-150 group-hover:text-white origin-bottom-right fa-solid fa-circle-xmark text-lg left-1 transition-all cursor-pointer"></i>
 
-                  <img
-                    :src="user.avatar"
-                    alt="user avt"
-                    class="object-cover w-[160px] h-[150px] rounded-t-md"
-                  />
-                  <div
-                    class="bg-white flex-grow flex items-center justify-center rounded-b-md"
-                  >
+                  <img :src="user.avatar" alt="user avt" class="object-cover w-[160px] h-[150px] rounded-t-md" />
+
+                  <div class="bg-white flex-grow flex items-center justify-center rounded-b-md">
                     <p class="text-[#0866ff] text-lg p-3">
-                      {{ user.info.surName }}
+                      {{ user.surname }}
                     </p>
                   </div>
                 </div>
-                <div
-                  class="add_account"
-                  @click="isOpenForm = true"
-                  style="
+                <div class="add_account" @click="isOpenForm = true" style="
                     box-shadow: 0 0 0 1px #dddfe2;
                     display: inline-block;
                     cursor: pointer;
-                  "
-                >
-                  <div
-                    class="plus"
-                    style="
+                  ">
+                  <div class="plus" style="
                       width: 160px;
                       display: flex;
                       justify-content: center;
@@ -77,11 +47,8 @@
                       height: 150px;
                       border-top-left-radius: 8px;
                       border-top-right-radius: 8px;
-                    "
-                  >
-                    <div
-                      class="plus_icon"
-                      style="
+                    ">
+                    <div class="plus_icon" style="
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -90,23 +57,15 @@
                         width: 40px;
                         height: 40px;
                         padding: 2px;
-                      "
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
-                        style="width: 32px; height: 32px"
-                        fill="white"
-                      >
-                      <path
-                          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
-                        />
+                      ">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="width: 32px; height: 32px"
+                        fill="white">
+                        <path
+                          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
                       </svg>
                     </div>
                   </div>
-                  <div
-                    class="add_button text-lg"
-                    style="
+                  <div class="add_button text-lg" style="
                       padding: 12px;
                       color: #0866ff;
                       width: 160px;
@@ -114,18 +73,14 @@
                       border-bottom-right-radius: 8px;
                       text-align: center;
                       background-color: white;
-                    "
-                  >
+                    ">
                     Add Account
                   </div>
                 </div>
               </div>
             </div>
             <div class="right-box">
-              <loginForm
-                :isShowRemember="true"
-                :isShowSignup="true"
-              ></loginForm>
+              <loginForm :isShowRemember="true" :isShowSignup="true"></loginForm>
               <div class="bottom-link-box">
                 <a class="bottom-link" href="#"><b>Create a Page</b></a>
                 for a celebrity, band or business.
@@ -138,21 +93,14 @@
     <baseFooter></baseFooter>
     <!-- form for add login -->
     <Transition name="fade">
-      <div
-        v-if="isOpenForm"
-        @click="isOpenForm = false"
-        class="bg-[rgb(0,0,0,0.4)] fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      >
+      <div v-if="isOpenForm" @click="isOpenForm = false"
+        class="bg-[rgb(0,0,0,0.4)] fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <loginForm class="!mx-auto !mt-28" :isShowRemember="true" @click.stop>
           <template #default>
-            <div
-              class="border-b-2 p-4 my-2 flex items-center relative justify-between"
-            >
+            <div class="border-b-2 p-4 my-2 flex items-center relative justify-between">
               <h1 class="text-xl text-center flex-grow">Log in to Facebook</h1>
-              <i
-                class="fa-solid absolute -top-2 right-0 fa-circle-xmark text-4xl hover:text-[#74C0FC] cursor-pointer"
-                @click="isOpenForm = false"
-              ></i>
+              <i class="fa-solid absolute -top-2 right-0 fa-circle-xmark text-4xl hover:text-[#74C0FC] cursor-pointer"
+                @click="isOpenForm = false"></i>
             </div>
           </template>
         </loginForm>
@@ -161,30 +109,17 @@
 
     <!-- form for recent login -->
     <Transition name="fade">
-      <div
-        v-if="isOpenUserForm"
-        @click="isOpenUserForm = false"
-        class="bg-[rgb(0,0,0,0.4)] fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      >
-        <loginForm
-          @click.stop
-          class="!mx-auto !mt-28 relative"
-          :EmailInputText="userSelected.email"
-          :isShowRemember="true"
-        >
+      <div v-if="isOpenUserForm" @click="isOpenUserForm = false"
+        class="bg-[rgb(0,0,0,0.4)] fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <loginForm @click.stop class="!mx-auto !mt-28 relative" :EmailInputText="userSelected.email"
+          :isShowRemember="true">
           <template #avatar>
-            <i
-              class="fa-solid absolute top-3 right-3 fa-circle-xmark text-4xl hover:text-[#74C0FC] cursor-pointer"
-              @click="isOpenUserForm = false"
-            ></i>
-            <img
-              :src="userSelected.avatar"
-              class="mt-7 object-cover w-48 h-48 rounded-full m-auto"
-              alt=""
-            />
+            <i class="fa-solid absolute top-3 right-3 fa-circle-xmark text-4xl hover:text-[#74C0FC] cursor-pointer"
+              @click="isOpenUserForm = false"></i>
+            <img :src="userSelected.avatar" class="mt-7 object-cover w-48 h-48 rounded-full m-auto" alt="" />
             <p class="mb-7 mt-1 text-lg text-center">
               {{
-                userSelected.info.firstName + " " + userSelected.info.surName
+                userSelected.firstname + " " + userSelected.surname
               }}
             </p>
           </template>
@@ -216,7 +151,7 @@ let recentUsers = ref([]);
 // get recent users
 async function getUserInfo(emails) {
   recentUsers.value = await store.dispatch("auth/getInfo", emails);
-  console.log(recentUsers.value); 
+  console.log(recentUsers.value);
 }
 // if emailUsers change, change display recent logins user list
 watch(emailUsers, () => {
@@ -254,11 +189,13 @@ onMounted(async () => {
   padding-top: 72px;
   min-width: 500px;
 }
+
 #toggleEyeIcon:hover {
   background-color: rgb(27, 29, 32, 0.1);
 
   border-radius: 100%;
 }
+
 .big-box {
   display: flex;
   width: 1262px;
@@ -285,9 +222,11 @@ onMounted(async () => {
 .image-box {
   padding: 112px 0 16px;
 }
+
 .fb-logo {
   margin-left: -20px;
 }
+
 .logo-caption {
   font-family: SFProDisplay-Regular, Helvetica, Arial, sans-serif;
   font-size: 28px;
@@ -519,9 +458,11 @@ footer {
   margin-top: 0px;
   margin-bottom: 0px;
 }
+
 .add_account:hover {
   box-shadow: 0 1px 8px 5px #dddfe2 !important;
 }
+
 .add_account {
   transition: all 0.2s ease-out;
   border-radius: 3px;
@@ -535,12 +476,14 @@ footer {
     padding-top: 0px;
     margin-top: -90px;
   }
+
   .fb-logo {
     height: 106px;
     border: 0;
     object-fit: contain;
     margin: auto;
   }
+
   .big-box {
     display: flex;
     flex-direction: column;

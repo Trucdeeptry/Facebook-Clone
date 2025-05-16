@@ -1,23 +1,14 @@
 <template>
-  <div
-    v-if="isModalOpen"
-    id="CreatePostOverlay"
-    class="fixed z-50 top-0 left-0 w-full h-full bg-black/70"
-  >
+  <!-- create post -->
+  <div v-if="isModalOpen" id="CreatePostOverlay" class="fixed z-50 top-0 left-0 w-full h-full bg-black/70">
     <div class="grid h-screen place-items-center p-4">
-      <div
-        class="dark:bg-dark-main bg-white w-full max-w-[600px] mx-auto shadow-xl rounded-xl"
-      >
+      <div class="dark:bg-dark-main bg-white w-full max-w-[600px] mx-auto shadow-xl rounded-xl">
         <div class="flex items-center relative my-3.5 mx-1">
-          <div
-            class="text-[22px] text-black dark:text-primary-txt font-bold w-full text-center"
-          >
+          <div class="text-[22px] text-black dark:text-primary-txt font-bold w-full text-center">
             Create post
           </div>
-          <div
-            @click="emit('closePost')"
-            class="absolute right-3 rounded-full p-1.5 px-2.5 bg-gray-200 hover:bg-gray-300 cursor-pointer"
-          >
+          <div @click="emit('closePost')"
+            class="absolute right-3 rounded-full p-1.5 px-2.5 bg-gray-200 hover:bg-gray-300 cursor-pointer">
             <i class="fa-solid fa-xmark text-[27px]"></i>
           </div>
         </div>
@@ -25,17 +16,13 @@
         <div class="border-t border-t-gray-500">
           <div class="p-4">
             <div class="flex items-center">
-              <img
-                class="rounded-full ml-1 min-w-[45px] max-h-[45px] object-cover"
-                :src="user.avatar"
-              />
+              <img class="rounded-full ml-1 min-w-[45px] max-h-[45px] object-cover" :src="user.avatar" />
               <div class="ml-4">
                 <div class="font-bold dark:text-primary-txt">
-                  {{ user.info.firstName + " " + user.info.surName }}
+                  {{ user.firstname + " " + user.surname }}
                 </div>
                 <div
-                  class="flex cursor-pointer items-center gap-1 w-[100px] dark:text-primary-txt dark:bg-dark-third bg-gray-200 p-1 px-2 rounded-lg"
-                >
+                  class="flex cursor-pointer items-center gap-1 w-[100px] dark:text-primary-txt dark:bg-dark-third bg-gray-200 p-1 px-2 rounded-lg">
                   <i class="fa-solid fa-earth-americas"></i>
                   <span class="font-bold pl-1.5 text-[13px]">Public</span>
                   <i class="fa-solid fa-caret-down"></i>
@@ -44,12 +31,8 @@
             </div>
 
             <div class="max-h-[350px] overflow-auto">
-              <textarea
-                class="w-full outline-none dark:text-primary-txt border-0 p-2 mt-4 focus:ring-0 text-[22px]"
-                placeholder="What's on your mind?"
-                cols="30"
-                rows="3"
-              ></textarea>
+              <textarea class="w-full outline-none dark:text-primary-txt border-0 p-2 mt-4 focus:ring-0 text-[22px]"
+                placeholder="What's on your mind?" cols="30" rows="3" v-model="textContent"></textarea>
               <!-- <div class="p-2 border border-gray-300 rounded-lg relative">
                 <Close
                   @click="clearImage()"
@@ -61,43 +44,22 @@
               </div> -->
             </div>
 
-            <div
-              class="border-1 rounded-xl dark:border-gray-500 mt-4 p-1 shadow-sm flex items-center justify-between"
-            >
+            <div class="border-1 rounded-xl dark:border-gray-500 mt-4 p-1 shadow-sm flex items-center justify-between">
               <div class="font-bold p-4 text-sm dark:text-primary-txt">
                 Add to your post
               </div>
               <div class="flex items-center">
-                <button
-                  class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11"
-                >
-                  <i
-                    class="fa-regular fa-face-laugh text-[24px]"
-                    style="color: #ffd43b"
-                  ></i>
+                <button class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
+                  <i class="fa-regular fa-face-laugh text-[24px]" style="color: #ffd43b"></i>
                 </button>
-                <button
-                  class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11"
-                >
-                  <i
-                    class="fa-solid fa-photo-film text-[24px]"
-                    style="color: #63e6be"
-                  ></i>
+                <button class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
+                  <i class="fa-solid fa-photo-film text-[24px]" style="color: #63e6be"></i>
                 </button>
-                <button
-                  class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11"
-                >
-                  <i
-                    class="fa-solid fa-user-tag text-[24px]"
-                    style="color: #74c0fc"
-                  ></i>
+                <button class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
+                  <i class="fa-solid fa-user-tag text-[24px]" style="color: #74c0fc"></i>
                 </button>
-                <button
-                  class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11"
-                >
-                  <i
-                    class="fa-solid fa-ellipsis text-[24px] dark:text-white"
-                  ></i>
+                <button class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
+                  <i class="fa-solid fa-ellipsis text-[24px] dark:text-white"></i>
                 </button>
               </div>
             </div>
@@ -110,10 +72,8 @@
               </div>
             </div> -->
 
-            <button
-              @click="createPost"
-              class="w-full bg-blue-500 hover:bg-blue-600 text-white font-extrabold p-1.5 mt-3 rounded-lg"
-            >
+            <button @click="createPost" :disabled="!textContent"
+              class="w-full cursor-pointer bg-blue-500 disabled:cursor-not-allowed disabled:bg-gray-500 hover:bg-blue-600 text-white font-extrabold p-1.5 mt-3 rounded-lg">
               Post
             </button>
           </div>
@@ -121,14 +81,21 @@
       </div>
     </div>
   </div>
+  <!-- end create post -->
 </template>
 
 <script setup>
 import { defineProps, defineEmits } from "vue";
-import { inject } from "vue";
+import { inject, ref } from "vue";
 defineProps({
   isModalOpen: Boolean,
 });
 const user = inject("user");
 const emit = defineEmits(["closePost"]);
+const textContent = ref('')
+
+function createPost() {
+  console.log(1);
+
+}
 </script>
