@@ -4,12 +4,14 @@
     <h1 v-else-if="props.postsProp.length == 0" class="text-center font-bold text-2xl mt-10">
       Nothing Here! You're hasn't information
       <br>
-      If you're employer, please go to /login with email "phantruc438@gmail.com" and default password that have the information of the post
+      If you're employer, please go to /login with email "phantruc438@gmail.com" and default password that have the
+      information of the post
     </h1>
     <div v-else v-for="post in posts" :key="post.id"
       class="shadow bg-white dark:bg-dark-second dark:text-primary-txt mt-4 rounded-lg">
       <!-- POST AUTHOR -->
       <div class="flex items-center justify-between px-4 py-2">
+
         <div class="flex space-x-2 items-center">
           <div class="relative">
             <a href="#">
@@ -125,6 +127,7 @@
       </div>
       <!-- END COMMENT FORM -->
     </div>
+
   </section>
 </template>
 
@@ -180,7 +183,8 @@ onBeforeMount(async () => {
         formatedTime: formatTime(post.created_at),
       };
     });
-    
+
+
   } catch (error) {
     console.log(error);
   } finally {
