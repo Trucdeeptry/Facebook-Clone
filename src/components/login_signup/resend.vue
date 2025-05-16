@@ -38,12 +38,9 @@ async function handleSend(number) {
   // khoá nút send ngay khi bấm, nếu không sẽ bị bấm vào nhiều lần
   time.value = "Sending...";
   // Khi gửi xong sẽ setTime
-
-  const sendAction = await store.dispatch("auth/sendEmail", props.info);
-  if (sendAction) {
-    setTime(number);
-  } else {
-    alert("Send email failed, please try again later");
-  }
+  const sendMessage = await store.dispatch("auth/sendEmail", props.info);
+  if (sendMessage != true)
+    alert(sendMessage);
+  setTime(number)
 }
 </script>

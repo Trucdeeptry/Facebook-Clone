@@ -10,7 +10,6 @@ const store = useStore();
 const router = useRouter();
 onMounted(async () => {
   await store.dispatch("auth/autoLogin");
-  
 });
 </script>
 

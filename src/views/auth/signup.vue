@@ -337,7 +337,7 @@ const onSubmit = handleSubmit(async (values) => {
     },
   };
   isLoading.value = true;
-  store.dispatch(
+  await store.dispatch(
     'auth/signUpAction',
     signUpInfo
   )

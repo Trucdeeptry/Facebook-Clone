@@ -7,7 +7,7 @@
       <div class="w-full lg:w-2/3 xl:w-2/5 pt-32 lg:pt-16 px-2">
         <post_form class="!mt-24"></post_form>
         <story class="!mt-6 !mb-6"></story>
-        <post :isOverlay="true" v-if="posts.length" :postsProp="posts"></post>
+        <post :isOverlay="true"  :postsProp="posts"></post>
       </div>
       <right_menu></right_menu>
     </div>
@@ -32,17 +32,19 @@ const store = useStore();
 const router = useRouter();
 // log out
 function logOut() {
-  
+
 }
 // get posts
 const posts = ref([]);
 async function getPosts(user_id) {
-  const getPosts = await store.dispatch("home/getPosts", user_id);  
+  const getPosts = await store.dispatch("home/getPosts", user_id);
+  
   return getPosts;
+
 }
 watch(isLoadingUser, async (loading) => {
   if (!loading && userInfo.value) {
-    posts.value = await getPosts(userInfo.value.user_id);
+    posts.value = await getPosts(userInfo.value.user_id);    
   }
 });
 </script>

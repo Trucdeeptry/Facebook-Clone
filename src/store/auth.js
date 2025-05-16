@@ -75,7 +75,7 @@ export default {
     async signUpAction(_, payload) {
       try {
         const { email, password, info } = payload;
-        const { exists } = axios.post(
+        const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/functions/v1/email_checker`,
           {
             email,
@@ -87,8 +87,9 @@ export default {
             },
           }
         );
+        const exists = response.data.exists;
         if (exists) {
-          console.log("Email already exists");
+          alert("Email already exists");
           return;
         }
         const { data: SignUpData, error: SignupError } =
@@ -100,7 +101,7 @@ export default {
             },
           });
         if (SignupError) {
-          console.log("Sign up failed: ", SignupError);
+          alert("Sign up failed: ", SignupError);
           return;
         }
 
@@ -117,15 +118,15 @@ export default {
         );
         if (CreateError) {
           console.error(CreateError);
+          alert(CreateError.message);
           return;
         }
 
         router.push("/verify");
         localStorage.setItem("signUpInfo", email);
       } catch (error) {
+        alert(error);
         console.log(error);
-
-        return error;
       }
     },
     async autoLogin() {
@@ -153,7 +154,7 @@ export default {
       });
       if (error) {
         console.error("Error resending verification email:", error.message);
-        return false;
+        return error.message;
       } else {
         return true;
       }

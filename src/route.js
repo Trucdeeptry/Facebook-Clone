@@ -54,14 +54,25 @@ const router = createRouter({
       props: (route) => {
         const hash = route.hash;
         const params = new URLSearchParams(hash.slice(1));
+        const accessToken = params.get("access_token");
+        if (accessToken) {
+          return {
+            success: true,
+            accessToken,
+            error: null,
+            errorCode: null,
+            errorDescription: null,
+          };
+        }
         return {
+          success: false,
           error: params.get("error"),
           errorCode: params.get("error_code"),
           errorDescription: params.get("error_description"),
         };
       },
       beforeEnter: (to, from, next) => {
-        const hash = route.hash;
+        const hash = to.hash;
         const params = new URLSearchParams(hash.slice(1));
         try {
           if (params) {

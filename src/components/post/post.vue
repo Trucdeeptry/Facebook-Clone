@@ -2,7 +2,9 @@
   <section>
     <loading_post v-if="!props.postsProp"></loading_post>
     <h1 v-else-if="props.postsProp.length == 0" class="text-center font-bold text-2xl mt-10">
-      Nothing Here!
+      Nothing Here! You're hasn't information
+      <br>
+      If you're employer, please go to /login with email "phantruc438@gmail.com" and default password that have the information of the post
     </h1>
     <div v-else v-for="post in posts" :key="post.id"
       class="shadow bg-white dark:bg-dark-second dark:text-primary-txt mt-4 rounded-lg">
@@ -149,6 +151,7 @@ const props = defineProps({
 });
 
 
+
 const user = inject("user");
 const posts = ref([]);
 const isLoadingPosts = ref(true);
@@ -176,7 +179,8 @@ onBeforeMount(async () => {
         ...post,
         formatedTime: formatTime(post.created_at),
       };
-    });    
+    });
+    
   } catch (error) {
     console.log(error);
   } finally {
