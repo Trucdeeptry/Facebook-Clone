@@ -36,10 +36,12 @@ export default {
         return true;
       }
     },
-    async getUserInfo(){
-      const { data: { user } } = await supabase.auth.getUser()      
-      return user
-    }
+    async getUserInfo() {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      return user;
+    },
   },
   actions: {
     async logOut() {
@@ -94,7 +96,7 @@ export default {
             email,
             password,
             options: {
-              emailRedirectTo: `${import.meta.env.VITE_DOMAIN}/verify-status`,
+              emailRedirectTo: `${window.location.origin}/verify-status`,
             },
           });
         if (SignupError) {

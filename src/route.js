@@ -119,8 +119,9 @@ const router = createRouter({
     }
   },
 });
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !store.getters["auth/isAuthenticated"]) {
+router.beforeEach(async (to, from, next) => {
+  const isAuth = await store.getters["auth/isAuthenticated"];
+  if (to.meta.requiresAuth && !isAuth) {
     next("/login");
   } else {
     next();
