@@ -21,7 +21,7 @@
                 <div class="account_logged add_account relative group" v-for="user in recentUsers" :key="user.email"
                   @click="
                     isOpenUserForm = true;
-                    userSelected = user;
+                  userSelected = user;
                   ">
                   <i @click.stop="removeAccount(user.email)"
                     class="absolute group-hover:scale-150 group-hover:text-white origin-bottom-right fa-solid fa-circle-xmark text-lg left-1 transition-all cursor-pointer"></i>
@@ -151,7 +151,6 @@ let recentUsers = ref([]);
 // get recent users
 async function getUserInfo(emails) {
   recentUsers.value = await store.dispatch("auth/getInfo", emails);
-  console.log(recentUsers.value);
 }
 // if emailUsers change, change display recent logins user list
 watch(emailUsers, () => {

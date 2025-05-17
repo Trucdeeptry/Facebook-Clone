@@ -153,6 +153,7 @@ const props = defineProps({
   },
 });
 
+console.log(props.postsProp);
 
 
 const user = inject("user");
