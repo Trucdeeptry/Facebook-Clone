@@ -58,7 +58,6 @@ const router = createRouter({
         if (accessToken) {
           return {
             success: true,
-            accessToken,
             error: null,
             errorCode: null,
             errorDescription: null,

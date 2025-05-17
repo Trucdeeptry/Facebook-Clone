@@ -149,7 +149,6 @@ export default {
     },
     async sendEmail(_, email) {
       const { error } = await supabase.auth.resend({
-        type: "signup",
         email,
       });
       if (error) {

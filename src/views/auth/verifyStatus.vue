@@ -2,7 +2,7 @@
   <card title="Verify status">
     <template #body>
       <div>
-        <p v-if="error">{{ Message }}</p>
+        <p v-if="message">{{ message }}</p>
         <p v-else>Something when wrong!</p>
       </div>
     </template>
@@ -28,17 +28,19 @@ const props = defineProps(['error', 'errorCode', 'errorDescription', 'success'
 
 
 // Tạo thông điệp lỗi tùy thuộc vào mã lỗi
-let Message = "";
+let message = "";
+
+
+if (props.success) {
+  message = "Xác thực thành công, bạn hãy đăng nhập!"
+}
 if (props.error) {
-  if (props.success) {
-    Message = "Xác thực thành công, bạn hãy đăng nhập!"
-  }
   if (props.errorCode === "otp_expired") {
-    Message = "Liên kết xác thực đã hết hạn. Vui lòng yêu cầu một liên kết mới.";
+    message = "Liên kết xác thực đã hết hạn. Vui lòng yêu cầu một liên kết mới.";
   } else if (props.errorCode === "access_denied") {
-    Message = "Liên kết xác thực không hợp lệ hoặc đã được sử dụng.";
+    message = "Liên kết xác thực không hợp lệ hoặc đã được sử dụng.";
   } else {
-    Message = "Đã xảy ra lỗi khi xác thực. Vui lòng thử lại.";
+    message = "Đã xảy ra lỗi khi xác thực. Vui lòng thử lại.";
   }
 }
 

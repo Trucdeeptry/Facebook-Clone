@@ -5,9 +5,7 @@
 <script setup>
 import { onMounted } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
 const store = useStore();
-const router = useRouter();
 onMounted(async () => {
   await store.dispatch("auth/autoLogin");
 });
@@ -21,9 +19,11 @@ onMounted(async () => {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
