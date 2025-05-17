@@ -2,7 +2,7 @@
   <section>
     <loading_post v-if="!props.postsProp"></loading_post>
     <h1 v-else-if="props.postsProp.length == 0" class="text-center font-bold text-2xl mt-10">
-      Nothing Here! You're hasn't information
+      Nothing Here! You haven't information
       <br>
       If you're employer, please go to /login with email "phantruc438@gmail.com" and default password that have the
       information of the post
