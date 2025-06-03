@@ -1,6 +1,6 @@
 <template>
   <section>
-    <loading_post v-if="!props.postsProp"></loading_post>
+    <loading_post v-if="isLoadingPosts"></loading_post>
     <h1 v-else-if="props.postsProp.length == 0" class="text-center font-bold text-2xl mt-10">
       Nothing Here! You haven't information
       <br>
@@ -127,7 +127,6 @@
       </div>
       <!-- END COMMENT FORM -->
     </div>
-
   </section>
 </template>
 
@@ -136,7 +135,7 @@ import overlay from "./post_overlay.vue";
 import comment from "./comment.vue";
 import loading_post from "../home/loading_post.vue";
 import { formatTime } from "../../composables/dateHanlde";
-import { defineProps, inject, onBeforeMount, ref } from "vue";
+import { defineProps, inject, ref, watch } from "vue";
 import react_icon from "./react_icon.vue";
 const props = defineProps({
   postsProp: {
@@ -152,9 +151,15 @@ const props = defineProps({
     default: false,
   },
 });
-
-console.log(props.postsProp);
-
+watch(() => props.postsProp, (newVal) => {
+  posts.value = newVal.map((post) => {
+    return {
+      ...post,
+      formatedTime: formatTime(post.created_at),
+    };
+  });
+  isLoadingPosts.value = false;
+});
 
 const user = inject("user");
 const posts = ref([]);
@@ -175,21 +180,4 @@ function toggleCommentOverlay(postId) {
   activePost.value = postId;
 
 }
-
-onBeforeMount(async () => {
-  try {
-    posts.value = props.postsProp.map((post) => {
-      return {
-        ...post,
-        formatedTime: formatTime(post.created_at),
-      };
-    });
-
-
-  } catch (error) {
-    console.log(error);
-  } finally {
-    isLoadingPosts.value = false;
-  }
-});
 </script>

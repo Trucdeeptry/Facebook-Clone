@@ -3,7 +3,7 @@
     <card title="Verify your email">
       <template #body>
         <div class="main text-lg" v-if="signupInfo">
-          <p>Please check your emails for a message with your verify url.</p>
+          <p>Please check your email for a message with your verify url.</p>
           <p>
             We sent your code to: <b>{{ signupInfo }}</b>
           </p>

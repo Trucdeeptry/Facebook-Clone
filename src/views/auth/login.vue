@@ -6,11 +6,11 @@
         <div class="bigger-box" style="background-size: cover; background-color: #f2f4f7">
           <div class="big-box">
             <div class="left-box">
-              <img class="fb-logo" src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg" alt="" style="
+              <img class="demo-logo max-h-10 object-contain" src="/img/home/demo-logo.png" alt="" style="
                   width: 60%;
 
                   margin-bottom: 0px;
-                  margin-bottom: -14px;
+               
                 " />
 
               <h2 class="logo-caption" style="padding: 0; font-size: 36px; color: #333">
@@ -82,8 +82,10 @@
             <div class="right-box">
               <loginForm :isShowRemember="true" :isShowSignup="true"></loginForm>
               <div class="bottom-link-box">
-                <a class="bottom-link" href="#"><b>Create a Page</b></a>
-                for a celebrity, band or business.
+                <a class="bottom-link" href="#"><b> This is a student project for learning purposes only. Do NOT
+                    enter real Facebook credentials.
+                  </b></a>
+
               </div>
             </div>
           </div>
@@ -222,7 +224,7 @@ onMounted(async () => {
   padding: 112px 0 16px;
 }
 
-.fb-logo {
+.demo-logo {
   margin-left: -20px;
 }
 
@@ -476,7 +478,7 @@ footer {
     margin-top: -90px;
   }
 
-  .fb-logo {
+  .demo-logo {
     height: 106px;
     border: 0;
     object-fit: contain;

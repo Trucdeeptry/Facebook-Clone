@@ -4,9 +4,7 @@
     <!-- LEFT NAV -->
     <div class="flex z-[1] items-center justify-between gap-2 px-4 py-2">
       <router-link to="/home" class="inline-block">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/1024px-2023_Facebook_icon.svg.png"
-          height="40" width="40" class="md:w-20 lg:w-10" />
+        <img src="/img/home/demo-logo.png" height="40" width="40" class="md:w-20 lg:w-10" />
       </router-link>
       <div class="flex items-center justify-between space-x-1">
         <div
