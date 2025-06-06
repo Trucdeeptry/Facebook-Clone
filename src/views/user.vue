@@ -46,7 +46,7 @@
             </div>
 
             <div class="flex dark:text-dark-txt items-centerw-full border-t h-[50px] py-[4px]">
-              <button class="w-[85px]">
+              <button class="w-[84px]">
                 <div
                   class="flex items-center text-[15px] justify-center h-[45px] text-blue-500 hover:bg-[#F2F2F2] dark:hover:bg-dark-third w-full font-bold rounded-lg cursor-pointer">
                   Posts
