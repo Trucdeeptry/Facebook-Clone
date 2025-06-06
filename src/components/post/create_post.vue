@@ -31,7 +31,8 @@
                 </div>
 
               </div>
-              <i @click="openMagic" class="dark:text-white cursor-pointer text-xl hover:opacity-60 fa-solid fa-wand-magic-sparkles"></i>
+              <i @click="openMagic"
+                class="dark:text-white cursor-pointer text-xl hover:opacity-60 fa-solid fa-wand-magic-sparkles"></i>
               <div v-show="isOpenMagic" class="absolute right-0 top-12 w-[90%] max-w-md mx-auto md:right-10 z-50">
                 <!-- Card container -->
                 <div
@@ -168,9 +169,9 @@
               </div>
             </div> -->
 
-            <button @click="createPost" :disabled="!textContent"
+            <button @click="createPost" :disabled="!textContent || isPostCreating"
               class="w-full cursor-pointer bg-blue-500 disabled:cursor-not-allowed disabled:bg-gray-500 hover:bg-blue-600 text-white font-extrabold p-1.5 mt-3 rounded-lg">
-              Post
+              {{ isPostCreating ? 'Posting...' : 'Post' }}
             </button>
           </div>
         </div>
@@ -184,12 +185,16 @@
 import { defineProps, defineEmits, inject, ref } from "vue";
 import { useStore } from "vuex";
 import loading_spinner from "../loading/loading_spinner.vue";
-defineProps({
+const props = defineProps({
   isModalOpen: Boolean,
+  keyOfPost: {
+    type: String,
+    default: 'postsHome'
+  }
 });
 const store = useStore();
 const user = inject("user");
-const emit = defineEmits(["closePost"]);
+const emit = defineEmits(["closePost", "updatePostList"]);
 const textContent = ref('')
 const hashtags = ref([])
 const isOpenMagic = ref(false);
@@ -197,11 +202,11 @@ const suggestedHashtags = ref([]);
 const isLoadingHashtags = ref(false);
 const isLoadingPredict = ref(false);
 const predictNumber = ref({})
-
+const isPostCreating = ref(false);
 async function getSuggestedHashtags(hashtags) {
   isLoadingHashtags.value = true;
 
-  suggestedHashtags.value = await store.dispatch("home/getSuggestHashTags", hashtags);
+  suggestedHashtags.value = await store.dispatch("post/getSuggestHashTags", hashtags);
   isLoadingHashtags.value = false;
 }
 async function getPredict() {
@@ -216,7 +221,7 @@ async function getPredict() {
       hashtags: suggestedHashtags.value,
       created_at: store.getters['home/getCurrentDateTime']
     }
-    predictNumber.value = await store.dispatch("home/getPredictReact", new_ad)
+    predictNumber.value = await store.dispatch("post/getPredictReact", new_ad)
     console.log(predictNumber.value.likes);
 
   } catch (error) {
@@ -244,6 +249,39 @@ function applyHashtags() {
   hashtags.value = suggestedHashtags.value.join(' ');
   isOpenMagic.value = false;
 }
+async function createPost() {
+  isPostCreating.value = true;
+  if (!textContent.value.trim()) {
+    return;
+  }
+
+  const post = {
+    text: textContent.value,
+    hashtags: hashtags.value,
+    user_id: user.value.user_id,
+    image: 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg'
+  };
+  await store.dispatch("post/addPost", post)
+    .then((data) => {
+      textContent.value = '';
+      hashtags.value = [];
+      emit('closePost');
+      updatePost(data.id);
+    })
+    .catch(error => {
+      console.error("Error creating post:", error);
+    });
 
 
+  isPostCreating.value = false;
+}
+async function updatePost(postId) {
+  const posts = store.getters["post/getPosts"](props.keyOfPost);
+  const post = await store.dispatch('post/getPostById', postId)
+  posts.unshift(post);
+  store.commit("post/setPosts", {
+    posts,
+    key: props.keyOfPost
+  });
+}
 </script>

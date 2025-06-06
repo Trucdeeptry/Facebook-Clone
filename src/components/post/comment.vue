@@ -45,8 +45,6 @@ import { formatTime } from "../../composables/dateHanlde";
 const props = defineProps(["commentsProp", "authorOfReplies"]);
 
 function formatCommentsTime(comments) {
-  console.log(comments);
-
   const result = comments.map(comment => ({
     ...comment,
     replies: formatCommentsTime(comment.replies),

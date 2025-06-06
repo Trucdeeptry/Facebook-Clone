@@ -1,13 +1,14 @@
 <template>
   <section>
-    <loading_post v-if="isLoadingPosts"></loading_post>
-    <h1 v-else-if="props.postsProp.length == 0" class="text-center font-bold text-2xl mt-10">
+    <loading_post v-if="posts === null"></loading_post>
+
+    <h1 v-else-if="posts.length == 0" class="text-center font-bold text-2xl mt-10">
       Nothing Here! You haven't information
       <br>
       If you're employer, please go to /login with email "phantruc438@gmail.com" and default password that have the
       information of the post
     </h1>
-    <div v-else v-for="post in posts" :key="post.id"
+    <div v-for="post in posts" :key="post.id"
       class="shadow bg-white dark:bg-dark-second dark:text-primary-txt mt-4 rounded-lg">
       <!-- POST AUTHOR -->
       <div class="flex items-center justify-between px-4 py-2">
@@ -135,13 +136,9 @@ import overlay from "./post_overlay.vue";
 import comment from "./comment.vue";
 import loading_post from "../home/loading_post.vue";
 import { formatTime } from "../../composables/dateHanlde";
-import { defineProps, inject, ref, watch } from "vue";
+import { defineProps, inject, ref, computed } from "vue";
 import react_icon from "./react_icon.vue";
 const props = defineProps({
-  postsProp: {
-    type: Array,
-    default: () => [],
-  },
   isOverlay: {
     type: Boolean,
     default: false,
@@ -150,20 +147,20 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  postsProp: {
+    type: Array,
+    default: () => null,
+  },
 });
-watch(() => props.postsProp, (newVal) => {
-  posts.value = newVal.map((post) => {
-    return {
-      ...post,
-      formatedTime: formatTime(post.created_at),
-    };
-  });
-  isLoadingPosts.value = false;
-});
+const posts = computed(() => {
+  if (props.postsProp === null) return null;
+  return props.postsProp.map(post => ({
+    ...post,
+    formatedTime: formatTime(post.created_at)
+  }))
+})
 
 const user = inject("user");
-const posts = ref([]);
-const isLoadingPosts = ref(true);
 // Count comment and replies by recursion
 function countComment(comments) {
   let count = comments?.length;
