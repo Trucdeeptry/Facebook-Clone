@@ -5,14 +5,14 @@
     <div class="flex justify-center h-screen">
       <left_menu> </left_menu>
       <div class="w-full lg:w-2/3 xl:w-2/5 pt-32 lg:pt-16 px-2">
-        <post_form class="!mt-24"></post_form>
+        <post_form keyOfPost="postsHome" class="!mt-24"></post_form>
         <story class="!mt-6 !mb-6"></story>
-        <post :isOverlay="true"  :postsProp="posts"></post>
+        <post class="post" :isOverlay="true" :postsProp="store.getters['post/getPosts']('postsHome')"></post>
       </div>
       <right_menu></right_menu>
     </div>
   </section>
-</template> 
+</template>
 
 <script setup>
 import header_nav from "../components/home/header_nav.vue";
@@ -31,16 +31,16 @@ const store = useStore();
 
 // get posts
 const posts = ref([]);
-async function getPosts(user_id) {
-  const getPosts = await store.dispatch("home/getPosts", user_id);
-  return getPosts;
-
-}
 watch(isLoadingUser, async (loading) => {
   if (!loading && userInfo.value) {
-    posts.value = await getPosts(userInfo.value.user_id);    
+    posts.value = await store.dispatch("post/getPosts", userInfo.value.user_id);
+    store.commit("post/setPosts", {
+      posts: posts.value,
+      key: "postsHome"
+    });
   }
 });
+
 </script>
 
 <style scoped>

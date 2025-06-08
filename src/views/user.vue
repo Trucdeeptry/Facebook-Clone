@@ -5,7 +5,7 @@
       <div class="w-full min-h-[100vh] pb-20 bg-[#F1F2F5] dark:bg-dark-main">
         <div class="w-full bg-white dark:bg-dark-second">
           <div class="max-w-[1100px] pt-[56px] mx-auto pb-1">
-            <img class="rounded-b-xl w-full h-96 object-cover" src="/img/home/feed-image-1.png" />
+            <img class="rounded-b-xl w-full h-96 object-cover" :src="imageExists(userProfile.profile_banner)" />
             <div id="ProfileInfo" class="flex md:flex-row flex-col py-4 items-center justify-between px-4">
               <div class="flex md:flex-row flex-col gap-4 md:-mt-6 -mt-16 items-center">
                 <div class="relative">
@@ -46,7 +46,7 @@
             </div>
 
             <div class="flex dark:text-dark-txt items-centerw-full border-t h-[50px] py-[4px]">
-              <button class="w-[85px]">
+              <button class="w-[84px]">
                 <div
                   class="flex items-center text-[15px] justify-center h-[45px] text-blue-500 hover:bg-[#F2F2F2] dark:hover:bg-dark-third w-full font-bold rounded-lg cursor-pointer">
                   Posts
@@ -171,8 +171,9 @@
             </user_card>
           </div>
           <div id="PostsSection" class="w-ful md:w-7/12 overflow-auto">
-            <post_form class="mt-4.5"></post_form>
-            <post :isOverlay="true" v-if="userPosts?.length > 0" :postsProp="userPosts">
+            <post_form keyOfPost="postsProfile" class="mt-4.5"></post_form>
+            <post :isOverlay="true" v-if="userPosts?.length > 0"
+              :postsProp="store.getters['post/getPosts']('postsProfile')">
             </post>
           </div>
         </div>
@@ -180,77 +181,90 @@
     </div>
   </template>
 
-  <script setup>
-  import user_card from "../components/user/user_card.vue";
-  import header_nav from "../components/home/header_nav.vue";
-  import post_form from "../components/post/post_form.vue";
-  import loadingPage from "./loadingPage.vue";
-  import post from "../components/post/post.vue";
-  import { ref, onBeforeMount } from "vue";
-  import { useStore } from "vuex";
-  import { useRoute } from "vue-router";
-  import { loginUser } from "../composables/autoLogin";
-  import loading_spinner from "../components/loading/loading_spinner.vue";
-  const { isLoadingUser } = loginUser();
+<script setup>
+import user_card from "../components/user/user_card.vue";
+import header_nav from "../components/home/header_nav.vue";
+import post_form from "../components/post/post_form.vue";
+import loadingPage from "./loadingPage.vue";
+import post from "../components/post/post.vue";
+import { ref, onBeforeMount } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+import { loginUser } from "../composables/autoLogin";
+import loading_spinner from "../components/loading/loading_spinner.vue";
+const { isLoadingUser } = loginUser();
 
-  const store = useStore();
-  const route = useRoute();
+const store = useStore();
+const route = useRoute();
 
-  const userId = route.params.id;
-  const userProfile = ref([]);
-  const userPostImg = ref([]);
-  const userPosts = ref([])
-  const friendsInfo = ref([]);
-  const isLoadingProfile = ref(true);
-  async function loadProfile() {
-    userPosts.value = await store.dispatch('user/getUserPosts', userId)
-    userProfile.value = await store.dispatch("user/getProfileById", userId);
-    userPostImg.value = userPosts.value.map(
-      (post) => post.image
+const userId = route.params.id;
+const userProfile = ref([]);
+const userPostImg = ref([]);
+const userPosts = ref([])
+const friendsInfo = ref([]);
+const isLoadingProfile = ref(true);
+async function loadProfile() {
+  await store.dispatch('post/getUserPosts', userId)
+  userPosts.value = store.getters["post/getPosts"]("postsProfile");
+  userProfile.value = await store.dispatch("user/getProfileById", userId);
+
+  userPostImg.value = userPosts.value.map(
+    (post) => post.image
+  );
+  if (userProfile.value.friends.length > 0) {
+    friendsInfo.value = await store.dispatch(
+      "auth/getInfo",
+      userProfile.value.friends
     );
-    if (userProfile.value.friends.length > 0) {
-      friendsInfo.value = await store.dispatch(
-        "auth/getInfo",
-        userProfile.value.friends
-      );
-    }
   }
-  // edit bio
-  const isEditBio = ref(false);
-  const editValue = ref("");
-  const isUpdating = ref(false);
+}
+// edit bio
+const isEditBio = ref(false);
+const editValue = ref("");
+const isUpdating = ref(false);
 
 
-  async function saveBio() {
-    isUpdating.value = true;
-    const reponse = await store.dispatch("user/updateProfile", {
-      input_user_id: userId,
-      input_bio: editValue.value,
-    });
-
-    if (reponse) {
-      userProfile.value.bio = editValue.value;
-    } else {
-      console.log("error for update bio");
-    }
-    isUpdating.value = false;
-    isEditBio.value = false;
-  }
-  // hanlde check are this user own this profile
-  const isOwner = ref(false);
-  async function checkOwner() {
-    const authUserId = await store.getters["auth/getUserInfo"];
-    return userId == authUserId.id;
-  }
-  onBeforeMount(async () => {
-    try {
-      await loadProfile();
-      editValue.value = userProfile.value.bio;
-      isOwner.value = await checkOwner();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      isLoadingProfile.value = false;
-    }
+async function saveBio() {
+  isUpdating.value = true;
+  const reponse = await store.dispatch("user/updateProfile", {
+    input_user_id: userId,
+    input_bio: editValue.value,
   });
-  </script>
+
+  if (reponse) {
+    userProfile.value.bio = editValue.value;
+  } else {
+    console.log("error for update bio");
+  }
+  isUpdating.value = false;
+  isEditBio.value = false;
+}
+// hanlde check are this user own this profile
+const isOwner = ref(false);
+async function checkOwner() {
+  const authUserId = await store.getters["auth/getUserInfo"];
+  return userId == authUserId.id;
+}
+// hanlde image banner
+function imageExists(image_url) {
+  var http = new XMLHttpRequest();
+  http.open('HEAD', image_url, false);
+  http.send();
+  if (http.status != 404) {
+    return image_url;
+  } else {
+    return '/img/home/feed-image-1.png';
+  }
+}
+onBeforeMount(async () => {
+  try {
+    await loadProfile();
+    editValue.value = userProfile.value.bio;
+    isOwner.value = await checkOwner();
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoadingProfile.value = false;
+  }
+});
+</script>

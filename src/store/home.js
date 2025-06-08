@@ -34,43 +34,6 @@ export default {
       }
     },
 
-    async getPosts(_, input_user_id) {
-      const { data, error } = await supabase.functions.invoke("fpgrowth", {
-        body: { input_user_id },
-      });
-      if (error) console.error(error);
-      else return data.posts;
-    },
-    async getSuggestHashTags(_, hashtags) {
-      const { data, error } = await supabase.functions.invoke("GetSuggestion", {
-        body: {
-          hashtags,
-        },
-      });
-      if (error) console.error(error);
-      else return data.suggestions;
-    },
-    async getPredictReact(_, new_ad) {
-      if (!new_ad) return;
-      try {
-        const response = await fetch(
-          "https://regression-hashtag.onrender.com/predict",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              new_ad
-            }),
-          }
-        );
-        const  {result} = await response.json();        
-        return result;
-      } catch (error) {
-        console.log(error);
-        return error;
-      }
-    },
+    
   },
 };

@@ -31,12 +31,6 @@ export default {
         return false;
       }
     },
-    async getUserPosts(_, input_user_id) {
-      let { data, error } = await supabase.rpc("user_post", {
-        input_user_id,
-      });
-      if (error) console.error(error);
-      else return data;
-    },
+    
   },
 };
