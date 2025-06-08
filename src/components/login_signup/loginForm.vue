@@ -19,7 +19,7 @@
         <label :for="uniqueId" class="text-base opacity-70 ml-3">Rememer password</label>
       </div>
       <div class="space">
-        <button type="submit" :class="{ '!bg-gray-500': isLoading }" :disabled="isLoading"
+        <button ref="autoClickBtn" type="submit" :class="{ '!bg-gray-500': isLoading }" :disabled="isLoading"
           class="login-button h-12 flex justify-center items-center">
           <loading-spinner v-if="isLoading"></loading-spinner>
           <b v-else>Log in</b>
@@ -40,7 +40,7 @@
 
 <script setup>
 import passwordInput from "./passwordInput.vue";
-import { ref, computed, reactive, defineProps } from "vue";
+import { ref, computed, reactive, defineProps, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 const props = defineProps(["isShowRemember", "EmailInputText", "isShowSignup"]);
@@ -50,7 +50,8 @@ const router = useRouter();
 
 // declare user
 const user = reactive({
-  email: "",
+  // default email and password for testing
+  email: "phantruc438@gmail.com",
   password: "9942994Ngoc",
 });
 
@@ -77,6 +78,10 @@ if (props.EmailInputText) {
 const isLoading = computed(() => store.state.isLoading);
 // handle id when use this form many times in 1 view
 const uniqueId = Math.random().toString(36).substr(2, 9);
+const autoClickBtn = ref(null)
+onMounted(() => {
+  autoClickBtn.value?.click();
+});
 </script>
 
 <style scoped>
