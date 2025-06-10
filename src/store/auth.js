@@ -55,6 +55,7 @@ export default {
     },
     async LoginAuthentication(context, payload) {
       try {
+
         const { email, password, isSave } = payload;
         const { data, error } = await supabase.auth.signInWithPassword({
           email,

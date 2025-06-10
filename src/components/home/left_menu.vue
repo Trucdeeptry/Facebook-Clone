@@ -1,113 +1,195 @@
 <template>
-  <div class="w-1/5 !pt-12 h-full hidden xl:flex flex-col fixed top-0 left-0 text-sm scroll-container">
-    <ul class="p-4 text-white">
-      <li>
-        <router-link :to="`/user/${user.user_id}`" href="#"
-          class="flex items-center text-black space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img :src="user.avatar" alt="Profile picture" class="w-8 h-8 rounded-full object-cover" />
-          <span class="font-semibold">{{
-            user.firstname + " " + user.surname
-          }}</span>
+  <div
+    class="w-60 pt-16 h-full hidden xl:flex flex-col fixed top-0 left-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 scroll-container">
+    <!-- Main Navigation -->
+    <div class="flex-1 px-4 py-16 space-y-2">
+      <!-- User Profile -->
+      <div class="mb-6">
+        <router-link :to="`/user/${user.user_id}`"
+          class="flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 group">
+          <div class="relative">
+            <img :src="user.avatar" alt="Profile picture"
+              class="w-10 h-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-blue-500 transition-all duration-200" />
+            <div
+              class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full">
+            </div>
+          </div>
+          <span
+            class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+            {{ user.firstname + " " + user.surname }}
+          </span>
         </router-link>
-      </li>
-      <li>
-        <a href="#"
-          class="flex items-center text-black space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/friends.png" alt="Profile picture" class="w-8 h-8 rounded-full" />
-          <span class="font-semibold">Friends</span>
-        </a>
-      </li>
-      <li>
-        <a href="#"
-          class="flex items-center text-black space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/page.png" alt="Profile picture" class="w-8 h-8 rounded-full" />
-          <span class="font-semibold">Pages</span>
-        </a>
-      </li>
-      <li>
-        <a href="#"
-          class="flex items-center text-black space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/memory.png" alt="Profile picture" class="w-8 h-8 rounded-full" />
-          <span class="font-semibold">Memories</span>
-        </a>
-      </li>
-      <li>
-        <a href="#"
-          class="flex items-center text-black space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/group.png" alt="Profile picture" class="w-8 h-8 rounded-full" />
-          <span class="font-semibold">Groups</span>
-        </a>
-      </li>
-      <li>
-        <a href="#"
-          class="flex items-center text-black space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <span class="w-8 h-8 rounded-full grid place-items-center bg-gray-300 dark:bg-dark-second">
-            <i class="bx bx-chevron-down"></i>
-          </span>
-          <span class="font-semibold">See more</span>
-        </a>
-      </li>
-      <li class="border-b border-gray-200 dark:border-dark-third mt-6"></li>
-    </ul>
-    <div class="flex justify-between items-center px-4 h-4 group">
-      <span class="font-semibold !text-second-txt text-lg dark:text-dark-txt">Your shortcuts</span>
-      <span
-        class="text-blue-500 cursor-pointer hover:bg-gray-200 dark:hover:bg-dark-third p-2 rounded-md hidden group-hover:inline-block">Edit</span>
-    </div>
-    <ul class="p-4">
-      <li>
-        <a href="#"
-          class="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/group-img-1.jpg" alt="Profile picture" class="w-8 h-8 rounded-lg" />
-          <span class="font-semibold">Cộng đồng Front-end(HTML/CSS/JS) Việt Nam</span>
-        </a>
-      </li>
-      <li>
-        <a href="#"
-          class="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/group-img-2.jpg" alt="Profile picture" class="w-8 h-8 rounded-lg" />
-          <span class="font-semibold">CNPM08_UIT_Group học tập</span>
-        </a>
-      </li>
-      <li>
-        <a href="#"
-          class="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/group-img-3.jpg" alt="Profile picture" class="w-8 h-8 rounded-lg" />
-          <span class="font-semibold">Cộng đồng UI/UX Design vietnam</span>
-        </a>
-      </li>
+      </div>
 
-      <li>
+      <!-- Navigation Items -->
+      <nav class="space-y-1">
         <a href="#"
-          class="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <img src="/img/home/group-img-4.jpg" alt="Profile picture" class="w-8 h-8 rounded-lg" />
-          <span class="font-semibold">Nihon Koi</span>
+          class="flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 relative group">
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 bg-blue-100 dark:bg-blue-900">
+            <img src="/img/home/friends.png" alt="Friends" class="w-5 h-5" />
+          </div>
+          <span
+            class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 flex-1">Friends</span>
+          <div class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">3</div>
         </a>
-      </li>
-      <li>
+
         <a href="#"
-          class="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded-lg transition-all dark:text-primary-txt dark:hover:bg-dark-third">
-          <span class="w-8 h-8 rounded-full grid place-items-center bg-gray-300 dark:bg-dark-second">
-            <i class="bx bx-chevron-down"></i>
-          </span>
-          <span class="font-semibold">See more</span>
+          class="flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 relative group">
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 bg-orange-100 dark:bg-orange-900">
+            <img src="/img/home/page.png" alt="Pages" class="w-5 h-5" />
+          </div>
+          <span
+            class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 flex-1">Pages</span>
         </a>
-      </li>
-    </ul>
-    <div class="mt-auto p-6 text-sm text-gray-500 dark:text-primary-txt">
-      <a href="#">Privacy</a>
-      <span>.</span>
-      <a href="#">Terms</a>
-      <span>.</span>
-      <a href="#">Advertising</a>
-      <span>.</span>
-      <a href="#">Cookies</a>
-      <span>.</span>
-      <a href="#">Ad choices</a>
-      <span>.</span>
-      <a href="#">More</a>
-      <span>.</span>
-      <span>Facebook © 2021</span>
+
+        <a href="#"
+          class="flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 relative group">
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 bg-purple-100 dark:bg-purple-900">
+            <img src="/img/home/memory.png" alt="Memories" class="w-5 h-5" />
+          </div>
+          <span
+            class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 flex-1">Memories</span>
+        </a>
+
+        <a href="#"
+          class="flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 relative group">
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 bg-green-100 dark:bg-green-900">
+            <img src="/img/home/group.png" alt="Groups" class="w-5 h-5" />
+          </div>
+          <span
+            class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 flex-1">Groups</span>
+          <div class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">12</div>
+        </a>
+
+        <a href="#"
+          class="flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 relative group">
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 bg-gray-100 dark:bg-gray-700">
+            <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <span
+            class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 flex-1">See
+            more</span>
+        </a>
+      </nav>
+
+      <!-- Divider -->
+      <div class="border-t border-gray-200 dark:border-gray-700 my-6"></div>
+
+      <!-- Shortcuts Section -->
+      <div class="space-y-4">
+        <div class="flex justify-between items-center px-2 group">
+          <h3 class="font-semibold text-gray-700 dark:text-gray-300 text-lg">
+            Your shortcuts
+          </h3>
+          <button
+            class="text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-3 py-1 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-200">
+            Edit
+          </button>
+        </div>
+
+        <!-- Shortcuts List -->
+        <div class="space-y-1">
+          <a href="#"
+            class="flex items-start space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 group">
+            <img src="/img/home/group-img-1.jpg" alt="Group" class="w-10 h-10 rounded-xl object-cover" />
+            <div class="flex-1 min-w-0">
+              <span
+                class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 text-sm line-clamp-2">
+                Cộng đồng Front-end(HTML/CSS/JS) Việt Nam
+              </span>
+              <div class="flex items-center space-x-1 mt-1">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span class="text-xs text-gray-500 dark:text-gray-400">2.3k online</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="#"
+            class="flex items-start space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 group">
+            <img src="/img/home/group-img-2.jpg" alt="Group" class="w-10 h-10 rounded-xl object-cover" />
+            <div class="flex-1 min-w-0">
+              <span
+                class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 text-sm line-clamp-2">
+                CNPM08_UIT_Group học tập
+              </span>
+              <div class="flex items-center space-x-1 mt-1">
+                <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                <span class="text-xs text-gray-500 dark:text-gray-400">45 online</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="#"
+            class="flex items-start space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 group">
+            <img src="/img/home/group-img-3.jpg" alt="Group" class="w-10 h-10 rounded-xl object-cover" />
+            <div class="flex-1 min-w-0">
+              <span
+                class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 text-sm line-clamp-2">
+                Cộng đồng UI/UX Design vietnam
+              </span>
+              <div class="flex items-center space-x-1 mt-1">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span class="text-xs text-gray-500 dark:text-gray-400">1.8k online</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="#"
+            class="flex items-start space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 group">
+            <img src="/img/home/group-img-4.jpg" alt="Group" class="w-10 h-10 rounded-xl object-cover" />
+            <div class="flex-1 min-w-0">
+              <span
+                class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 text-sm line-clamp-2">
+                Nihon Koi
+              </span>
+              <div class="flex items-center space-x-1 mt-1">
+                <div class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                <span class="text-xs text-gray-500 dark:text-gray-400">12 online</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="#"
+            class="flex items-start space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200 group">
+            <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+            <span
+              class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 text-sm">See
+              more</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+      <div class="flex flex-wrap gap-1 text-xs text-gray-500 dark:text-gray-400">
+        <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy</a>
+        <span>·</span>
+        <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Terms</a>
+        <span>·</span>
+        <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Advertising</a>
+        <span>·</span>
+        <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Cookies</a>
+        <span>·</span>
+        <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Ad choices</a>
+        <span>·</span>
+        <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">More</a>
+      </div>
+      <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
+        Social © 2024
+      </div>
     </div>
   </div>
 </template>
@@ -115,55 +197,53 @@
 <script setup>
 import { inject } from "vue";
 const user = inject("user");
-
 </script>
-<style>
+
+<style scoped>
 .scroll-container {
-  overflow: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
-/* Thanh cuộn (scrollbar) */
+/* Custom Scrollbar */
 .scroll-container::-webkit-scrollbar {
-  width: 8px;
-  /* Bỏ thuộc tính position: fixed vì nó không áp dụng cho pseudo-element này */
+  width: 6px;
 }
 
-/* Thanh cuộn thumb mặc định (ẩn bằng cách sử dụng màu nền trong suốt) */
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .scroll-container::-webkit-scrollbar-thumb {
   background-color: transparent;
-  border-radius: 9999px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
 }
 
-/* Khi hover hoặc focus, chuyển sang màu nền mong muốn */
-.scroll-container:hover::-webkit-scrollbar-thumb,
-.scroll-container:focus-within::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  /* bg-gray-300 */
+.scroll-container:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5);
 }
 
-/* Track của thanh cuộn */
-.scroll-container::-webkit-scrollbar-track {
-  background-color: #f3f4f6;
-  /* bg-gray-100 */
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.8);
 }
 
-/* Chế độ dark mode */
+/* Dark mode scrollbar */
 @media (prefers-color-scheme: dark) {
-  .scroll-container::-webkit-scrollbar-track {
-    background-color: transparent;
-    /* bg-neutral-700 */
+  .scroll-container:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(75, 85, 99, 0.5);
   }
 
-  .scroll-container::-webkit-scrollbar-thumb {
-    /* Mặc định trong dark mode */
-    background-color: transparent;
+  .scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(75, 85, 99, 0.8);
   }
+}
 
-  .scroll-container:hover::-webkit-scrollbar-thumb,
-  .scroll-container:focus-within::-webkit-scrollbar-thumb {
-    background-color: #6b7280;
-    /* bg-neutral-500 */
-  }
+/* Line clamp utility for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
