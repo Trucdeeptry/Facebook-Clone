@@ -15,7 +15,8 @@
           <li v-if="react.userId?.length > 0" @click="handleActive(react.react)"
             :class="activeEmotion === react.react ? 'text-blue-600' : ''"
             class="flex justify-center items-center gap-1 hover:bg-gray-100 dark:hover:bg-dark-third cursor-pointer p-4 rounded-xl">
-            <i :class="iconMap[react.react]"></i>
+            <img :src="iconMap[react.react]" class="w-5" alt="react">
+
 
             {{ formatCount(react.userId?.length) }}
           </li>
@@ -37,7 +38,7 @@
               <div
                 class="absolute flex justify-center items-center top-5 left-7 bg-white dark:bg-dark-second w-6 h-6 rounded-2xl">
 
-                <i :class="iconMap[user.react]"></i>
+                <img :src="iconMap[user.react]" alt="user react">
               </div>
             </div>
             <button
@@ -65,13 +66,14 @@ const hanlderClose = () => {
   emit("closeEmotions");
 };
 // hanlde UI
+
 const iconMap = {
-  like: "fa-solid fa-thumbs-up text-[#146eeb]",
-  love: "fa-solid fa-heart text-[#ed384f]",
-  haha: "fa-solid fa-laugh-squint text-[#FFD43B]",
-  wow: "fa-solid fa-face-surprise text-[#FFD43B]",
-  sad: "fa-solid fa-face-sad-tear text-[#FFD43B]",
-  angry: "fa-solid fa-face-angry text-[#ff7b00]",
+  like: "/reactions/like.png",
+  love: "/reactions/love.png",
+  haha: "/reactions/haha.png",
+  wow: "/reactions/wow.png",
+  sad: "/reactions/sad.png",
+  angry: "/reactions/angry.png",
 };
 const formatCount = (count) => {
   return count >= 1000 ? (count / 1000).toFixed(1) + "K" : count;

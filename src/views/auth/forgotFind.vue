@@ -7,12 +7,8 @@
             Please enter your email address or mobile number to search for your
             account.
           </p>
-          <input
-            v-model="email"
-            @input="isError = false"
-            type="email"
-            class="block my-3 w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"
-          />
+          <input v-model="email" @input="isError = false" type="email"
+            class="block my-3 w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500" />
         </div>
         <p v-if="isError" class="text-red-500">
           Your email is not exists. Please check again!
@@ -21,9 +17,7 @@
 
       <template #footer>
         <div class="flex justify-end gap-3 items-center">
-          <baseButton class="bg-gray-200 text-black" push="/login"
-            >Cancel</baseButton
-          >
+          <baseButton class="bg-gray-200 text-black" push="/login">Cancel</baseButton>
           <baseButton type="submit" class="bg-blue-500 text-white">
             <div>
               <loading_spinner v-if="isLoading"></loading_spinner>
@@ -51,10 +45,11 @@ const email = ref("");
 const isError = ref(false);
 async function findUser(email) {
   try {
-    const info = await store.dispatch("auth/getInfo", email);
+    const info = await store.dispatch("auth/getInfo", [email]);
     if (info) {
       localStorage.setItem("forgotInfo", JSON.stringify(info));
       router.push("/forgot-recover");
+
     } else {
       isError.value = true;
     }

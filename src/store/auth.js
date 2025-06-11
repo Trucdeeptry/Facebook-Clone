@@ -55,7 +55,6 @@ export default {
     },
     async LoginAuthentication(context, payload) {
       try {
-
         const { email, password, isSave } = payload;
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -64,6 +63,7 @@ export default {
         if (error) {
           console.error("Login failed:", error.message);
           alert(error.message);
+          return;
         }
         if (data && isSave) {
           router.push("/home");
@@ -131,6 +131,8 @@ export default {
       }
     },
     async autoLogin() {
+      console.log("auto");
+
       const supabaseCookies = Cookies.get("supabase.auth.token");
       if (!supabaseCookies) return;
       const loginSession = JSON.parse(supabaseCookies);
@@ -149,12 +151,12 @@ export default {
       }
     },
     async sendEmail(_, email) {
-      const { error } = await supabase.auth.resend({
-        email,
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: "http://localhost:5173/forgot-changepass",
       });
       if (error) {
         console.error("Error resending verification email:", error.message);
-        return error.message;
+        return false;
       } else {
         return true;
       }
@@ -179,6 +181,8 @@ export default {
     },
     async getInfo(_, emails) {
       if (!emails) return;
+      console.log(emails);
+
       try {
         const { data, error } = await supabase
           .from("profiles")
@@ -193,6 +197,31 @@ export default {
         }
       } catch (error) {
         console.log("Unexpected error during getUser", error);
+      }
+    },
+    async changePassword(_, payload) {
+      const { email, newPassword, access_token, refresh_token } = payload;
+      if (!access_token || !refresh_token || !email || !newPassword) return;
+
+      const { data, error } = await supabase.auth.setSession({
+        access_token,
+        refresh_token,
+      });
+      if (error) {
+        console.log(error);
+        return;
+      }
+      const { data: updateData, error: updateError } =
+        await supabase.auth.updateUser({
+          password: newPassword,
+        });
+
+      if (updateError) {
+        console.error("Update Error:", updateError.message);
+      }
+
+      if (updateData) {
+        return true;
       }
     },
   },

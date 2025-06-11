@@ -1,10 +1,6 @@
 <template>
   <div class="header bg-white shadow-lg w-full p-4">
-    <img
-      class="w-36"
-      src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg"
-      alt=""
-    />
+    <img class="w-36" src="/img/home/demo-logo.png" alt="" />
   </div>
   <div class="content bg-[#e9ebee] py-32">
     <div class="card shadow-md rounded-lg bg-white m-auto w-[33rem]">

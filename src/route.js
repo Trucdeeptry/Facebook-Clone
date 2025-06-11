@@ -98,24 +98,28 @@ const router = createRouter({
       path: "/forgot-changepass",
       component: changePass,
       name: "changePass",
-      props: (route) => ({
-        token: route.query.token,
-      }),
-      beforeEnter: (to, from, next) => {
-        const { token } = to.query;
-        try {
-          if (token) {
-            const decoded = jwtDecode(token);
-            const currentTime = Math.floor(Date.now() / 1000);
-            if (decoded.exp < currentTime) {
-              next("/notFound");
-            } else {
-              next();
-            }
-          }
-        } catch {
-          next("/notFound");
+      props: (route) => {
+        const hash = route.hash;
+        const params = new URLSearchParams(hash.slice(1));
+        const accessToken = params.get("access_token");
+        const refreshToken = params.get("refresh_token");
+
+        if (accessToken) {
+          return {
+            success: true,
+            accessToken,
+            refreshToken,
+            error: null,
+            errorCode: null,
+            errorDescription: null,
+          };
         }
+        return {
+          success: false,
+          error: params.get("error"),
+          errorCode: params.get("error_code"),
+          errorDescription: params.get("error_description"),
+        };
       },
     },
 

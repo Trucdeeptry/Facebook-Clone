@@ -63,9 +63,9 @@
 
       <!-- POST REACT -->
       <div class="px-4 py-2">
-        <div class="relative h-3 flex">
-          <react_icon class="absolute left-0 -top-1" :object="post"></react_icon>
-          <div class="text-gray-500 absolute right-0 dark:text-dark-txt flex items-center gap-3">
+        <div class="flex justify-between items-center">
+          <react_icon :object="post"></react_icon>
+          <div class="text-gray-500  dark:text-dark-txt flex items-center gap-3">
             <span class="cursor-pointer hover:underline" @click="toggleCommentOverlay(post.id)">
               <span class="mr-1">{{ countComment(post.comments) }}</span>
               <i class="fa-solid fa-comment"></i></span>

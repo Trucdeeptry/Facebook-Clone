@@ -46,10 +46,9 @@
 
       <!-- Forgot Password Link -->
       <div class="text-center mb-6">
-        <a href="#" @click="$router.push('/forgot-find')"
+        <router-link to="/forgot-find"
           class="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200">
-          Forgotten password?
-        </a>
+          Forgotten password?</router-link>
       </div>
 
       <!-- Divider and Create Account Button -->
