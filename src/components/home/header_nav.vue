@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-white dark:bg-gray-900 h-max md:h-16 w-full border-b border-gray-200 dark:border-gray-800 shadow-sm fixed top-0 z-50 transition-colors duration-200">
+    class="bg-white dark:bg-gray-900 h-max md:h-16 w-full border-b border-gray-200 dark:border-gray-800 shadow-sm fixed top-0 z-20 transition-colors duration-200">
     <div class="max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between h-full px-4">
       <!-- LEFT SECTION: Logo & Search -->
       <div class="flex items-center justify-between w-full md:w-auto py-2 md:py-0 gap-4">

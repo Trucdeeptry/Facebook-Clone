@@ -87,9 +87,12 @@ export default {
       if (!post) return;
       const sentiment = await context.dispatch("getSentiment", post.text);
 
-      const hashtagsArray = post.hashtags
-        .split(" ")
-        .filter((tag) => tag !== "");
+      const hashtagsArray = [];
+      if (post.hashtags.length > 0) {
+        const hashtagsArray = post.hashtags
+          .split(" ")
+          .filter((tag) => tag !== "");
+      }
       const { data, error } = await supabase.rpc("add_post", {
         hashtags: hashtagsArray,
         image: post.image,
@@ -130,6 +133,79 @@ export default {
           posts: data,
           key: "postsProfile",
         });
+      }
+    },
+
+    async uploadImage(_, payload) {
+      const { userId, postId, file } = payload;
+      if (!userId || !postId || !file) {
+        console.log("missing info");
+        return;
+      }
+
+      const filePath = `post_images/${userId}/${postId}/${Date.now()}_${
+        file.name
+      }`;
+      const { data, error } = await supabase.storage
+        .from("images")
+        .upload(filePath, file);
+
+      if (error) {
+        console.error(`Error uploading ${file.name}:`, error.message);
+      }
+
+      const { data: publicData } = supabase.storage
+        .from("images")
+        .getPublicUrl(filePath);
+      return publicData.publicUrl;
+    },
+
+    async updateImage(_, payload) {
+      try {
+        const { imageUrls, postId } = payload;
+        const { data, error, status } = await supabase
+          .from("posts")
+          .update({ image: imageUrls })
+          .eq("id", postId);
+        if (data.length === 0) {
+          console.warn(
+            "⚠️ Không có bản ghi nào được cập nhật. Có thể sai postId:",
+            postId
+          );
+        }
+        return response;
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    },
+
+    async toggleReact(_, payload) {
+      try {
+        const { targetId, reaction, type } = payload;
+        if (!targetId || !reaction) {
+          console.log("missing info:", targetId, reaction);
+          return;
+        }
+        const session = await supabase.auth.getSession();
+        const access_token = session.data.session.access_token;
+        const body =
+          type === "post"
+            ? { postId: targetId, reaction }
+            : { commentId: targetId, reaction };
+        const functionName =
+          type === "post" ? "handle-user-reaction" : "comment-user-react";
+        const { data, error } = await supabase.functions.invoke(functionName, {
+          body,
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+        if (error) console.log(error);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+        return;
       }
     },
   },

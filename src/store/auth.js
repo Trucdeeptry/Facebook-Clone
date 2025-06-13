@@ -181,8 +181,6 @@ export default {
     },
     async getInfo(_, emails) {
       if (!emails) return;
-      console.log(emails);
-
       try {
         const { data, error } = await supabase
           .from("profiles")

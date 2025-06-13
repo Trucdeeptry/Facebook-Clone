@@ -1,13 +1,17 @@
 <template>
-  <router-view :key="$route.fullPath"></router-view>
+  <router-view v-if="isReady" :key="$route.fullPath"></router-view>
 </template>
 
 <script setup>
+import { loginUser } from "./composables/autoLogin";
+import { watch, ref } from "vue";
+const isReady = ref(false);
+const { userInfo, isLoadingUser } = loginUser();
 
-import { onMounted } from "vue";
-import { useStore } from "vuex";
-const store = useStore();
-onMounted(async () => {
-  await store.dispatch("auth/autoLogin");
+watch(isLoadingUser, async (loading) => {
+
+  if (!loading) {
+    isReady.value = true
+  }
 });
 </script>

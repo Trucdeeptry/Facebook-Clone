@@ -140,7 +140,17 @@
               <input type="text" v-model="hashtags" placeholder="What's your topic?"
                 class="border dark:text-primary-txt rounded-xl w-full px-3 py-2">
             </div>
+            <div v-if="previews.length" class="mt-4 ">
 
+              <div class="flex gap-3 flex-wrap ">
+                <div v-for="(src, index) in previews" class="relative" :key="index">
+                  <img :src="src" alt="Preview" class="w-24 h-24 object-cover rounded" />
+                  <X @click="popImage(index)"
+                    class="text-sm text-white hover:opacity-100 opacity-60 cursor-pointer absolute right-0 top-0" />
+                </div>
+
+              </div>
+            </div>
             <div class="border-1 rounded-xl dark:border-gray-500 mt-4 p-1 shadow-sm flex items-center justify-between">
               <div class="font-bold p-4 text-sm dark:text-primary-txt">
                 Add to your post
@@ -149,9 +159,13 @@
                 <button class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
                   <i class="fa-regular fa-face-laugh text-[24px]" style="color: #ffd43b"></i>
                 </button>
-                <button class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
+                <button @click="triggerFileInput"
+                  class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
                   <i class="fa-solid fa-photo-film text-[24px]" style="color: #63e6be"></i>
                 </button>
+                <!-- Input file ẩn -->
+                <input ref="fileInput" type="file" accept="image/*" multiple class="hidden" @change="previewImages" />
+
                 <button class="hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full p-2 cursor-pointer w-11 h-11">
                   <i class="fa-solid fa-user-tag text-[24px]" style="color: #74c0fc"></i>
                 </button>
@@ -182,6 +196,7 @@
 </template>
 
 <script setup>
+import { X } from 'lucide-vue-next';
 import { defineProps, defineEmits, inject, ref } from "vue";
 import { useStore } from "vuex";
 import loading_spinner from "../loading/loading_spinner.vue";
@@ -250,30 +265,42 @@ function applyHashtags() {
   isOpenMagic.value = false;
 }
 async function createPost() {
-  isPostCreating.value = true;
-  if (!textContent.value.trim()) {
-    return;
-  }
+  try {
+    isPostCreating.value = true;
+    if (!textContent.value.trim()) {
+      return;
+    }
 
-  const post = {
-    text: textContent.value,
-    hashtags: hashtags.value,
-    user_id: user.value.user_id,
-    image: 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg'
-  };
-  await store.dispatch("post/addPost", post)
-    .then((data) => {
-      textContent.value = '';
-      hashtags.value = [];
-      emit('closePost');
-      updatePost(data.id);
-    })
-    .catch(error => {
-      console.error("Error creating post:", error);
+    // hanlde data
+    const post = {
+      text: textContent.value,
+      hashtags: hashtags.value,
+      user_id: user.value.user_id,
+    };
+    const data = await store.dispatch("post/addPost", post)
+    const postId = data.id
+
+    textContent.value = '';
+    hashtags.value = [];
+
+    const imageUrls = await uploadFiles(postId);
+    await store.dispatch('post/updateImage', {
+      imageUrls,
+      postId
     });
 
+    // handle finish post
+    emit('closePost');
+    updatePost(postId);
+    clearImage();
+    isPostCreating.value = false;
+  } catch (error) {
+    console.log(error);
+    return
 
-  isPostCreating.value = false;
+  }
+
+
 }
 async function updatePost(postId) {
   const posts = store.getters["post/getPosts"](props.keyOfPost);
@@ -283,5 +310,54 @@ async function updatePost(postId) {
     posts,
     key: props.keyOfPost
   });
+}
+
+
+const fileInput = ref(null)
+const previews = ref([])
+
+
+const triggerFileInput = () => {
+  fileInput.value.click()
+}
+const files = ref([])
+const previewImages = (e) => {
+  const selectedFiles = e.target.files
+  for (const file of selectedFiles) {
+    files.value.push(file)
+    const reader = new FileReader()
+    reader.onload = () => {
+      previews.value.push(reader.result)
+    }
+    reader.readAsDataURL(file)
+  }
+  e.target.value = null
+}
+function popImage(index) {
+  previews.value.splice(index, 1)
+  files.value.splice(index, 1)
+}
+function clearImage() {
+  previews.value = []
+  files.value = []
+}
+async function uploadFiles(postId) {
+  if (!files.value.length) {
+    console.log('missing files');
+    return
+
+  }
+  const userId = user.value.user_id
+  const imageUrls = []
+  for (const file of files.value) {
+    const info = {
+      userId,
+      postId,
+      file
+    }
+    const imageUrl = await store.dispatch('post/uploadImage', info)
+    imageUrls.push(imageUrl);
+  }
+  return imageUrls
 }
 </script>

@@ -1,7 +1,8 @@
 <template>
   <div>
     <div @click="toggleEmotions(object.id)"
-      class="hover:bg-gray-500/20 py-1 justify-between px-2 rounded-xl flex flex-row-reverse items-center cursor-pointer" v-if="
+      class="hover:bg-gray-500/20 py-1 justify-between px-2 rounded-xl flex flex-row-reverse items-center cursor-pointer"
+      v-if="
         (objectEmotion = getPostEmotion(object.likes)) &&
         objectEmotion.count > 0
       ">
@@ -36,12 +37,29 @@ function toggleEmotions(postId) {
   activeEmotion.value = postId;
 }
 function getPostEmotion(likedList) {
-  const reacts = likedList.map((react) => react.react);
-  const count = reacts.length;
-  const uniqueReact = [...new Set(reacts)];
+
+  const reactCountMap = {};
+
+  // Đếm số lượng mỗi loại react
+  likedList.forEach(({ react }) => {
+    if (react in reactCountMap) {
+      reactCountMap[react]++;
+    } else {
+      reactCountMap[react] = 1;
+    }
+  });
+
+  // Chuyển sang mảng và sắp xếp theo số lượng giảm dần
+  const sortedReacts = Object.entries(reactCountMap)
+    .sort((a, b) => a[1] - b[1]) // sắp xếp theo số lượng
+    .map(([react]) => react);    // chỉ lấy tên react
+
+  const totalCount = likedList.length;
+
   return {
-    react: uniqueReact,
-    count,
+    react: sortedReacts, // danh sách các loại reaction theo thứ tự phổ biến
+    count: totalCount,   // tổng số lượt reaction
   };
 }
+
 </script>

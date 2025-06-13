@@ -1,4 +1,3 @@
-import axios from "axios";
 import supabase from "../composables/supabase";
 export default {
   namespaced: true,

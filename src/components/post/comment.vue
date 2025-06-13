@@ -1,7 +1,7 @@
 <template>
   <!-- LIST COMMENT -->
   <section class="relative">
-    <div v-for="comment in formatCommentsTime(props.commentsProp)" :key="comment.id" class="flex space-x-2">
+    <div v-for="comment in formatCommentsTime(comments)" :key="comment.id" class="flex space-x-2">
       <img :src="comment.user.avatar" alt="Profile picture" class="w-9 h-9 rounded-full object-cover" />
       <div>
         <div class="inline-flex flex-col">
@@ -21,9 +21,11 @@
                 }}</router-link>
               {{ " " + comment.text }}</span>
           </div>
-          <div class="p-2 min-w-52 relative text-xs text-gray-500 inline-flex gap-3 dark:text-dark-txt">
+          <div
+            class="px-2 pb-3 min-w-52 relative items-center  text-xs text-gray-500 inline-flex gap-3 dark:text-dark-txt">
             <span> {{ comment.formatedTime }}</span>
-            <span class="font-semibold cursor-pointer hover:underline">Like</span>
+            <react_toggle @updateLikes="commentUpdate" :userId="user.user_id" :targetId="comment.id"
+              :likes="comment.likes" type="comment"></react_toggle>
             <span class="font-semibold cursor-pointer hover:underline">Reply</span>
             <react_icon :object="comment"></react_icon>
           </div>
@@ -40,10 +42,11 @@
 
 <script setup>
 import react_icon from "./react_icon.vue";
-import { defineProps } from "vue";
+import { defineProps, ref, inject } from "vue";
+import react_toggle from "./react_toggle.vue";
 import { formatTime } from "../../composables/dateHanlde";
 const props = defineProps(["commentsProp", "authorOfReplies"]);
-
+const comments = ref(props.commentsProp);
 function formatCommentsTime(comments) {
   const result = comments.map(comment => ({
     ...comment,
@@ -51,6 +54,20 @@ function formatCommentsTime(comments) {
     formatedTime: formatTime(comment.created_at),
   }))
   return result
+}
+const user = inject("user");
+function commentUpdate(info) {
+  const { likes, targetId } = info
+  const updatedComments = comments.value.map(comment => {
+    if (comment.id === targetId) {
+      return {
+        ...comment,
+        likes
+      }
+    }
+    return comment
+  })
+  comments.value = updatedComments
 
 }
 </script>

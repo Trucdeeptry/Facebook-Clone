@@ -22,25 +22,23 @@ import post_form from "../components/post/post_form.vue";
 import story from "../components/home/story.vue";
 import loadingPage from "./loadingPage.vue";
 import { useStore } from "vuex";
-import { loginUser } from "../composables/autoLogin";
-import post from "../components/post/post.vue";
-import { ref, watch } from "vue";
-const { userInfo, isLoadingUser } = loginUser();
 
+import post from "../components/post/post.vue";
+import { ref, inject, onMounted } from "vue";
+const isLoadingUser = ref(true)
 const store = useStore();
 
-// get posts
-const posts = ref([]);
-watch(isLoadingUser, async (loading) => {
-  if (!loading && userInfo.value) {
-    posts.value = await store.dispatch("post/getPosts", userInfo.value.user_id);
-    store.commit("post/setPosts", {
-      posts: posts.value,
-      key: "postsHome"
-    });
-  }
-});
-
+onMounted(async () => {
+  const user = inject("user");
+  isLoadingUser.value = true
+  const posts = ref([]);
+  posts.value = await store.dispatch("post/getPosts", user.value.user_id);
+  store.commit("post/setPosts", {
+    posts: posts.value,
+    key: "postsHome"
+  });
+  isLoadingUser.value = false
+})
 </script>
 
 <style scoped>

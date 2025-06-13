@@ -1,5 +1,5 @@
   <template>
-    <loadingPage v-if="isLoadingUser && isLoadingProfile"></loadingPage>
+    <loadingPage v-if="isLoadingProfile"></loadingPage>
     <div v-else>
       <header_nav></header_nav>
       <div class="w-full min-h-[100vh] pb-20 bg-[#F1F2F5] dark:bg-dark-main">
@@ -148,7 +148,7 @@
 
             <user_card title="Photos">
               <div class="py-2 grid gap-1 grid-cols-3 cursor-pointer">
-                <img v-for="img in userPostImg" :key="img" :src="img" alt="user photos"
+                <img v-for="img in flattenedImages" :key="img" :src="img" alt="user photos"
                   class="w-34 h-34 object-cover hover:opacity-85" />
               </div>
             </user_card>
@@ -187,12 +187,11 @@ import header_nav from "../components/home/header_nav.vue";
 import post_form from "../components/post/post_form.vue";
 import loadingPage from "./loadingPage.vue";
 import post from "../components/post/post.vue";
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import { loginUser } from "../composables/autoLogin";
+
 import loading_spinner from "../components/loading/loading_spinner.vue";
-const { isLoadingUser } = loginUser();
 
 const store = useStore();
 const route = useRoute();
@@ -218,6 +217,11 @@ async function loadProfile() {
     );
   }
 }
+const flattenedImages = computed(() =>
+  userPostImg.value
+    .flatMap(img => Array.isArray(img) ? img : [img])
+    .slice(0, 9) // lấy tối đa 9 ảnh
+);
 // edit bio
 const isEditBio = ref(false);
 const editValue = ref("");

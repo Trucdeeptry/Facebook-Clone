@@ -56,15 +56,29 @@
       <!-- END POST CONTENT -->
 
       <!-- POST IMAGE -->
-      <div class="py-2">
-        <img :src="post.image" class="w-full max-h-[600px] sm:max-h-[300px] object-cover" alt="Post image" />
+      <div v-if="post.image && post.image.length" class="grid gap-2" :class="{
+        'grid-cols-1': post.image.length === 1,
+        'grid-cols-2': post.image.length > 1
+      }">
+
+        <template v-for="(img, index) in post.image.slice(0, 4)" :key="img">
+          <div class="relative w-full max-h-96  sm:h-full overflow-hidden">
+            <img :src="img" alt="Post image" class="w-full cursor-pointer h-full object-cover" />
+
+            <!-- Overlay nếu là ảnh cuối và còn ảnh khác -->
+            <div v-if="index === 3 && post.image.length > 4"
+              class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-2xl font-bold">
+              +{{ post.image.length - 4 }}
+            </div>
+          </div>
+        </template>
       </div>
       <!-- END POST IMAGE -->
 
       <!-- POST REACT -->
       <div class="px-4 py-2">
         <div class="flex justify-between items-center">
-          <react_icon :object="post"></react_icon>
+          <react_icon :key="post.id + post.likes.length" :object="{ id: post.id, likes: post.likes }"></react_icon>
           <div class="text-gray-500  dark:text-dark-txt flex items-center gap-3">
             <span class="cursor-pointer hover:underline" @click="toggleCommentOverlay(post.id)">
               <span class="mr-1">{{ countComment(post.comments) }}</span>
@@ -79,11 +93,9 @@
       <div class="py-2 px-4">
         <div class="border border-gray-200 dark:border-dark-third border-l-0 border-r-0 py-1">
           <div class="flex space-x-2">
-            <div
-              class="w-1/3 flex space-x-2 justify-center items-center hover:bg-gray-100 dark:hover:bg-dark-third text-xl py-2 rounded-lg cursor-pointer text-gray-500 dark:text-dark-txt">
-              <i class="fa-regular fa-thumbs-up"></i>
-              <span class="text-sm font-semibold">Like</span>
-            </div>
+            <react_toggle @updateLikes="postUpdate" :userId="user.user_id" :targetId="post.id" :likes="post.likes"
+              type="post">
+            </react_toggle>
             <div @click="toggleCommentOverlay(post.id)"
               class="w-1/3 flex space-x-2 justify-center items-center hover:bg-gray-100 dark:hover:bg-dark-third text-xl py-2 rounded-lg cursor-pointer text-gray-500 dark:text-dark-txt">
               <i class="fa-regular fa-comment"></i>
@@ -103,30 +115,7 @@
       </div>
       <overlay :title="post.user.surname + `'s` + ' Post'" :postInfo="post" @closeOverlay="toggleCommentOverlay(null)"
         v-if="isOverlay && activePost === post.id"></overlay>
-      <!-- COMMENT FORM -->
-      <div v-if="isComment" class="py-2 pb-3 px-4 sticky z-10 -bottom-1 bg-white dark:bg-dark-second w-full">
-        <div class="flex space-x-2">
-          <img :src="user.avatar" alt="Profile picture" class="w-9 h-9 rounded-full object-cover" />
-          <div class="flex-1 flex bg-gray-100 dark:bg-dark-third rounded-full items-center justify-between px-3">
-            <input type="text" placeholder="Write a comment..." class="outline-none bg-transparent flex-1" />
-            <div class="flex space-x-0 items-center justify-center">
-              <span
-                class="w-7 h-7 grid place-items-center rounded-full hover:bg-gray-200 cursor-pointer text-gray-500 dark:text-dark-txt dark:hover:bg-dark-second text-xl"><i
-                  class="bx bx-smile"></i></span>
-              <span
-                class="w-7 h-7 grid place-items-center rounded-full hover:bg-gray-200 cursor-pointer text-gray-500 dark:text-dark-txt dark:hover:bg-dark-second text-xl"><i
-                  class="bx bx-camera"></i></span>
-              <span
-                class="w-7 h-7 grid place-items-center rounded-full hover:bg-gray-200 cursor-pointer text-gray-500 dark:text-dark-txt dark:hover:bg-dark-second text-xl"><i
-                  class="bx bxs-file-gif"></i></span>
-              <span
-                class="w-7 h-7 grid place-items-center rounded-full hover:bg-gray-200 cursor-pointer text-gray-500 dark:text-dark-txt dark:hover:bg-dark-second text-xl"><i
-                  class="bx bx-happy-heart-eyes"></i></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- END COMMENT FORM -->
+      <comment_form @updateComment="commentUpdate" v-if="isComment" :user="user" :postId="post.id"></comment_form>
     </div>
   </section>
 </template>
@@ -136,8 +125,10 @@ import overlay from "./post_overlay.vue";
 import comment from "./comment.vue";
 import loading_post from "../home/loading_post.vue";
 import { formatTime } from "../../composables/dateHanlde";
-import { defineProps, inject, ref, computed } from "vue";
+import { defineProps, inject, ref, watch, reactive } from "vue";
 import react_icon from "./react_icon.vue";
+import react_toggle from "./react_toggle.vue";
+import comment_form from "./comment_form.vue";
 const props = defineProps({
   isOverlay: {
     type: Boolean,
@@ -152,15 +143,23 @@ const props = defineProps({
     default: () => null,
   },
 });
-const posts = computed(() => {
-  if (props.postsProp === null) return null;
-  return props.postsProp.map(post => ({
-    ...post,
-    formatedTime: formatTime(post.created_at)
-  }))
-})
+const posts = ref(null)
+watch(
+  () => props.postsProp,
+  (newVal) => {
+    if (newVal) {
+      posts.value = newVal.map(post => ({
+        ...post,
+        formatedTime: formatTime(post.created_at)
+      }))
+    }
+  },
+  { immediate: true }
+)
 
 const user = inject("user");
+
+
 // Count comment and replies by recursion
 function countComment(comments) {
   let count = comments?.length;
@@ -175,6 +174,34 @@ function countComment(comments) {
 const activePost = ref(null);
 function toggleCommentOverlay(postId) {
   activePost.value = postId;
+}
+function postUpdate(info) {
+  const { likes, targetId } = info
+  const updatedPosts = posts.value.map(post => {
+    if (post.id === targetId) {
+      return {
+        ...post,
+        likes
+      }
+    }
+    return post
+  })
+  posts.value = updatedPosts
+}
 
+function commentUpdate(info) {
+  const { comment, postId } = info
+  if (!comment || !postId) {
+    console.log('missing info for update list comment');
+    return
+  }
+  const newComment = {
+    ...comment,
+    user
+  }
+  const index = posts.value.findIndex(p => p.id == postId)
+  if (index !== -1) {
+    posts.value[index].comments.push(newComment)
+  }
 }
 </script>
