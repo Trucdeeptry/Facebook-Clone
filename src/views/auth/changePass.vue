@@ -1,9 +1,7 @@
 <template>
   <div>
-
     <form @submit.prevent="onSubmit">
       <card title="Change your password">
-
         <template #body>
           <h1 v-if="message">{{ message }}</h1>
           <div v-else>

@@ -151,7 +151,8 @@ export default {
       }
     },
     async sendEmail(_, email) {
-      const domain = window.location.hostname;
+      const domain = window.location.origin;
+      console.log(domain);
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${domain}/forgot-changepass`,
       });
