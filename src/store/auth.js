@@ -151,8 +151,9 @@ export default {
       }
     },
     async sendEmail(_, email) {
+      const domain = window.location.hostname;
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: "http://localhost:5173/forgot-changepass",
+        redirectTo: `${domain}/forgot-changepass`,
       });
       if (error) {
         console.error("Error resending verification email:", error.message);
